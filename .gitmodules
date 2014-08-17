@@ -1,0 +1,3 @@
+[submodule "trng"]
+	path = trng
+	url = https://github.com/rabauke/trng4.git
