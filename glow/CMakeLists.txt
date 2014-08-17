@@ -54,6 +54,7 @@ set(SRCS
     src/factory.cpp
     src/function.cpp
     src/geometry.cpp
+    src/loader.cpp
     src/log_msg.cpp
     src/matte.cpp
     src/memento.cpp
