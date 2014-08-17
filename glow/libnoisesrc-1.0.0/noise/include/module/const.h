@@ -78,10 +78,13 @@ namespace noise
           return 0;
         }
 
-        virtual double GetValue (double x, double y, double z) const
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+        virtual double GetValue (double, double, double) const
         {
           return m_constValue;
         }
+#pragma clang diagnostic pop
 
         /// Sets the constant output value for this noise module.
         ///

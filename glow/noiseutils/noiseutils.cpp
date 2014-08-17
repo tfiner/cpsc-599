@@ -34,6 +34,9 @@ using namespace noise::module;
 // Bitmap header size.
 const int BMP_HEADER_SIZE = 54;
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-const-variable"
 // Direction of the light source, in compass degrees (0 = north, 90 = east,
 // 180 = south, 270 = east)
 const double DEFAULT_LIGHT_AZIMUTH = 45.0;
@@ -44,6 +47,7 @@ const double DEFAULT_LIGHT_CONTRAST  =  1.0;
 // Elevation of the light source above the horizon, in degrees (0 = on
 // horizon, 90 = directly overhead)
 const double DEFAULT_LIGHT_ELEVATION = 45.0;
+#pragma clang diagnostic pop
 
 //////////////////////////////////////////////////////////////////////////////
 // Miscellaneous functions
