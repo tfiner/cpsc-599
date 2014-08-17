@@ -4,3 +4,4 @@
 tbb::mutex coutMutex;
 
 
+int logVerbosity = 0;

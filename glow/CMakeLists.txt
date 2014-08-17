@@ -55,7 +55,6 @@ set(SRCS
     src/function.cpp
     src/geometry.cpp
     src/log_msg.cpp
-    src/main.cpp
     src/matte.cpp
     src/memento.cpp
     src/noise_factory.cpp
@@ -79,8 +78,17 @@ set(SRCS
 
 set(NOISE_UTIL
     noiseutils/noiseutils.cpp
-    )
+)
 
-add_executable( glow ${SRCS} ${NOISE_UTIL} )
+set(GLO_SRC
+    src/main.cpp
+)
+
+# libglow.dynlib or .so or .dll
+add_library( glow SHARED ${SRCS} ${NOISE_UTIL} )
 target_link_libraries( glow ${PNG_LIBRARY} tbb trng4 ${LIBNOISE_LIB_DIR}/libnoise.a )
+
+# glo, the executable
+add_executable( glo ${GLO_SRC} )
+target_link_libraries( glo glow )
 

@@ -25,7 +25,6 @@
 using namespace std;
 using namespace glow;
 
-int logVerbosity = 0;
 const char* VERSION_STR = "Glow 0.5.0";
 
 
