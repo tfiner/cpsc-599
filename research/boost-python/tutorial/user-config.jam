@@ -1,0 +1,8 @@
+#  MSVC configuration
+using clang : 11
+    : "/usr/bin/clang++"
+    : <cxxflags>"-std=c++11 -stdlib=libc++ -ftemplate-depth=512" <linkflags>"-stdlib=libc++"
+    ;
+
+#  Python configuration
+using python : 2.7.5 : /usr/bin/python ;

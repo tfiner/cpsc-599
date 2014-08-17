@@ -1,0 +1,94 @@
+First report
+
+Goals:
+Reuse the C++ code from CPSC-566 for the ray marcher.
+Communicate with the renderer via JSON messages.  Since the ray marcher already loads and parses JSON, the scene loading is already done.  I went back and read my old notes for the ray marcher.  The reason for making a UI is to speed along the experimental process of exploratory rendering.  
+
+Therefore, the UI should expose all of the knobs and buttons for tweaking the renderer.  The renderer uses the libnoise library where the modules are assembled into a directed acyclic graph, not unlike a shader tree.  This means that there will be a fair amount of work on the UI side of things, and I aim to minimize my effort in the UI code.
+
+I want an interactive tree of noise modules, with previews and a JSON editor.  The UI needs to be responsive and should probably be running it its own thread or process.
+
+In addition to these requirements, the renderer needs to be able to communicate error and progress messages back to the UI.  The UI also needs to be able to cancel a render in progress.  These extra bits are not insignificant to implement.  However, they are necessary to give the user enough feedback such that they would be willing to spend hours tinkering with it.
+
+Choices for UI, in order of development effort.
+    A. Straight C++ / Qt
+            This will take a while to do, a quick scan of reusable UI components do not include editable DAGs.
+
+    B. PyQt / Qt
+            This will take less time, but is still limited to the Qt UI components, the same as A.
+
+    C. PyQt / Webkit / JS
+            Right away I found a few JSON editors and DAG possibilities in JS.  JS is a very fertile ground for UI work.
+
+    D. JS
+            Same as C, all UI work in JS.  This puts an additional restriction in that the binding would need to be TCP (IV) and the renderer a net service (3).
+
+
+Choices for render/ UI bindings, in order of speed.
+    The binding needs to communicate requests from the UI: render and cancel.  The binding needs to communicate back progress, error and rendered imagery.
+
+    I.  Same process, memory
+            The code in main would need to be rewritten in the form of a library (static or dynamic).
+            Require some thread synchronization with UI.
+
+    II. Shared memory, separate processes
+            Also requires synchronization.
+            More stable than I in that the UI won't crash if the renderer does.
+            This requires some kind of a process monitor to start, kill, acquire status.
+
+    II. File based
+            Mostly already all done via command line, renderer reads a JSON and outputs a file.  
+            How would progress, errors and cancel be handled?
+            This requires some kind of a process monitor to start, kill, acquire status.
+    
+    IV. TCP based
+            Requires a server of some kind.
+            The renderer could run in the same process
+            This requires some kind of a process monitor to start, kill, acquire status.
+
+
+Choices for renderer:
+    1. Embed as a library
+            This could be used by any of the UI's except D and all of the bindings.
+
+    2. Run as a command line app
+            Pros: already done.            
+
+    3. Run as a net service (TCP), maybe even run as 2, but with a python server.
+
+Researched a few options for bindings, Pyrex, Cython and Boost Python.
+
+1. Boost Python, claims to wrap almost all C++ with a minimum of work.
+    a. Need to install (I'm using brew on OS X).
+    Realized my install of boost was lacking boost_python, found a page for mapnik that had the incantation:
+    https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
+
+    brew uninstall boost
+    brew install --build-from-source boost
+
+But I noticed that --without-python went past on the build messages and decided to Ctrl C and check the options myself with:
+    brew info boost
+
+    brew install --with-python --without-static --without-single boost    
+
+    After 4.5 minutes, success!
+
+    otool -L `brew list boost | grep python-mt.dylib` | grep -i python
+    /usr/local/Cellar/boost/1.55.0_2/lib/libboost_python-mt.dylib:
+        /usr/local/lib/libboost_python-mt.dylib (compatibility version 0.0.0, current version 0.0.0)
+        /System/Library/Frameworks/Python.framework/Versions/2.7/Python (compatibility version 2.7.0, current version 2.7.5)
+
+    b. Compiling the boost python tutorial.
+    1st, I really hate boost documentation, its always out of date and usually wrong.  In this case both.
+    bjam is a horrible build tool that is awfully documented too.  I spent an hour or two trying to get their stupid
+    too to work on OS X 10.9 Mavericks.  Yikes.
+
+    Here's the actualy way that worked:
+    clang++ -I $(python-config --includes) -shared -undefined dynamic_lookup $(python-config --libs) -l boost_python-mt hello.cpp -o hello_ext.so    
+
+    python hello.py
+    hello, world
+
+    Works.  No to try some bigger examples.
+
+    

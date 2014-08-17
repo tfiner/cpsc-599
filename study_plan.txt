@@ -1,0 +1,79 @@
+Independent Study Plan
+Fall 2014
+Tim Finer
+Prof. Michael Shafae
+
+Objective: Design and build a rendering application that will be the initial framework for rendering 3D landscapes.  The base renderer will be the ray tracer from CPSC-566.
+
+Features to be implemented during this schedule:
+
+    User Interface
+    Scene editing via a syntax highlighting JSON editor widget
+    The rest of libnoise added to the scene description language
+    Graph of noise tree, with a context sensitive preview (click on a node, see result)
+
+
+Bonus Features (if schedule allows):
+    Progressive rendering preview
+    Noise volume objects
+    Light Scattering
+    Ambient Occlusion
+    Sky box
+
+The schedule is 16 Weeks, broken up into 8, 2 week sprints. 
+
+Sprint 1
+August 23, 2014 - September 5, 2014
+
+Basic requirements, research
+Deliverable: 
+    Status report
+    Outstanding items:
+        UI framework, language, renderer bindings
+
+Sprint 2
+September 6, 2014 - September 19, 2014
+
+Deliverable: 
+    UI Mockup
+
+Sprint 3
+September 20, 2014 - October 3, 2014
+
+Deliverables:
+    Connect UI to renderer
+    JSON scene editor
+
+Sprint 4
+October 4, 2014 - October 17, 2014
+
+Deliverable:
+    Noise graph nodes, editable
+    Noise functions connected
+
+Sprint 5
+October 18, 2014 - October 31, 2014
+
+Deliverable:
+    UI: refinement
+    The rest of the noise functions connected
+
+Sprint 6
+November 1, 2014 - November 14, 2014
+
+Deliverable:
+    UI: preview of noise function nodes
+
+Sprint 7
+November 15 - November 28, 2014
+
+Deliverable:
+    Initial version of the application.
+
+Sprint 8    
+November 29 - December 12, 2014
+
+Deliverable:
+    Final version of the application.
+
+
