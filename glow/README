@@ -1,0 +1,153 @@
+CPSC-566
+Professor Michael Shafae
+Assignment 2
+Tim Finer
+
+Summary:
+Reads a scene, renders an image, saves it to disk.
+
+
+Building:
+
+Prerequisites (available on macports, and other repositories)
+Clang       3.4+
+CMake       2.6+
+Boost       1.54+
+Eigen       3+
+libPNG      1.5+
+
+Other Libraries
+
+libnoise    1.0.0 A library for generating all kinds of noise.  http://libnoise.sourceforge.net/
+            I made a CMake project file for this as a static library and have included it as well.
+
+cajun       2.0.2 A library for serializing JSON.
+            http://sourceforge.net/projects/cajun-jsonapi/
+
+
+I'm using CMake to build the raytracer.  This will generate a variety of other types of build files (Unix Makefiles, XCode projects, Visual Studio Solutions, etc.).
+
+Build an out-of-place build (works with absolute paths too):
+
+1. cd to another directory
+2. ccmake <Path to CMakeFiles.txt>
+This will run an ncurses interface.
+3. 'c' to configure.
+4. Enter at CMAKE_BUILD_TYPE, type in Release, then enter.
+5. 't'oggle advanced mode.
+
+6. Set the following settings (by hitting enter, typing, then enter).
+
+Also, ccmake works with readline, and auto expands paths if you hit the Tab key.
+BOOST_INCLUDE_DIR   <path to boost>
+CMAKE_CXX_COMPILER  <path to clang 3.4+>
+CMAKE_C_COMPILER    <path to clang 3.4+>
+EIGEN3_INCLUDE_DIR  <path to Eigen 3>
+
+Mine looks like this:
+BOOST_INCLUDE_DIR       /opt/local/include/boost  
+CMAKE_CXX_COMPILER      /opt/local/bin/clang++-mp-3.4
+CMAKE_C_COMPILER        /opt/local/bin/clang-mp-3.4
+EIGEN3_INCLUDE_DIR      /opt/local/include/eigen3
+
+7. 'g' to generate
+
+8. Run make:
+make -j 8 (I recommend this number to be the number of cores)
+
+Libraries Used:
+Boost 1.54+
+Eigen 
+libPNG
+optionparser.h by Matthias S. Benkmann
+libnoise
+cajun
+
+Implementation:
+
+I wrote all of the code, except for the libraries, the of the ray sphere intersection (Suffern) and the floating point comparison from Bruce Dawson.
+
+Additional features:
+
+From Assignment 1
+1. Advanced parser that is very fast and flexible.
+2. Depth images are scaled to [0.0 - 1.0]
+3. Color images are scaled to [0.0 - 1.0]
+4. Camera handles arbitrary direction.
+5. Output in PNG also includes complete scene description in file.
+6. Flexible verbosity (increase the number of v's for more verbosity).
+7. Raytracer outputs timing information after each run.
+8. Uses CMake, builds with Visual Studio, XCode, GNU Make, etc.
+
+Assignment 2 additions
+9. Regular gridded supersampling at 4x4 samples per pixel
+10. Specular shading via Phong Blinn
+11. Shadows
+12. Multithreading
+
+Final project additions
+13. JSON scene parser
+14. Ray marcher
+15. Perlin Simplex noise
+16. Wrapped all noise into a single lambda wrapper
+17. Added libnoise
+18. Added code to parse and link together a libnoise "noise tree" 
+19. Added linear fog that is attenuated along the z axis.
+20. Starfield background.
+
+TODO
+"No, there is too much. Let me sum up."  -Inigo Montoya, The Princess Bride
+
+* Wire up all of the libnoise modules to the scene parser
+* Add the viewplane sampler to the scene parser
+* Add more viewplane samplers
+* Add the conditional evaluation of the noise functions to the scene language.  Right now, the evaluation is a simple:
+if f(x,y,z) < z, then inside of a surface.
+* Add scripting to the scene language.
+* Add time to the scene language.
+* Add a user interface so that tweaks can be performed faster.
+* Add texturing
+* Extend the noise tree to textures 
+* Extend the ray marcher:
+** density
+** transmission
+** scattering
+** absorption
+** subsurface scattering
+* Add a manual mode that turns off the auto scaling of the images
+* Increase the depth images to 16 bit or floating point
+* Ambient occlusion
+* Clouds
+
+Results
+
+See the mars.json, coral.json and mud.json scene files, these were used to generate the PNG's of the same name.  I used Photoshop to enhance the contrast of my images and a little auto toning.  
+
+Things that worked well:
+
+JSON
+Using JSON as a scene description language.  All of the editors I use have a JSON syntax highlighting and syntax checking.  The Cajun library also reports exactly what line and character the error occurred in, making parsing debugging trivial.
+
+Design
+Splitting the parsing and the creation of objects made my life a lot easier.  I was able to replace the scene language in a short amount of time, because I had decoupled the parsing from the creation.
+
+I spent a fair amount of thought on where to divide responsibilities between the different classes, specifically with the goal of making the renderer flexible.  As a testament to this up front time, I was able to add a completely new type of renderer (a volume ray marcher) with very little change to the code.
+
+Things that didn't work so well:
+
+Boost Spirit
+I also tried out the Boost Spirit parser to parse the scene.  Wow, what a waste of time that was.  I spent too many hours decoding multi-page error streams of dubious verbiage.  My goal was to learn how to use it and I did.  I wasted at least 20  hours learning and figuring out how to use Boost Spirit.  I completely replaced the parser with JSON in less than a day.
+
+Floating rocks!  The evaluation of 3D noise without limiting it to a surface means that my images have floating rocks in them.  I think I can fix this by making the rendering do two passes.  The first pass, record all the noise values, the second pass, filter all the rocks (two pixels with the same).
+
+Unfinished business
+
+I tried to increase the dynamic range of the depth images, but ran into some troubles with saving floating point and 16 bit per channel PNG's.  This is on the TODO.
+
+I also spent some time attempting to add ambient occlusion, but ran into time constraints before putting it off.  This is on the TODO.
+
+Unexpected Results
+
+Volumetric rendering is new to me, so a lot things about it surprised me.  Changing the sampling rate of the ray greatly changes the scene.  Edges appear and disappear with a small changes in the delta used for the ray sampling. 
+
+Noise functions are tricky beasts - I have over 300 sample images that I rendered while in pursuit something nice looking.

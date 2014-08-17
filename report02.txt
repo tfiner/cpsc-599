@@ -26,7 +26,7 @@ But I noticed that --without-python went past on the build messages and decided 
     bjam is a horrible build tool that is awfully documented too.  I spent an hour or two trying to get their stupid
     too to work on OS X 10.9 Mavericks.  Yikes.
 
-    Here's the actualy way that worked:
+    Here's the actualy way that worked (based on a comment in http://stackoverflow.com/a/19758680/196682):
     clang++ -I $(python-config --includes) -shared -undefined dynamic_lookup $(python-config --libs) -l boost_python-mt hello.cpp -o hello_ext.so    
 
     python hello.py
@@ -34,7 +34,7 @@ But I noticed that --without-python went past on the build messages and decided 
 
     Works.  No to try some bigger examples.
 
-2. Checking out PyQt with Scintilla as a JS syntax highlighter.  Very simple.  Installed PyQt via brew and grabbed an example of PyQt using scintilla from Ely Bendersky's website.  
+2. Checking out PyQt with Scintilla as a JS syntax highlighter.  Very simple.  Installed PyQt via brew and grabbed an example of PyQt using scintilla from Ely Bendersky's website.  This provides a syntax highlighting editor within Qt and in Python.  
 
 pyqt\qsci.py
 

@@ -1,0 +1,116 @@
+{
+    "camera" : {
+        "type":"SimplePerspective",
+        "center":    { "x": 0.0, "y": 0.0, "z": 50.0 },
+        "direction": { "x": 0.0, "y": 0.5, "z": -0.25 },
+        "up":        { "x": 0.0, "y": 0.0, "z": 1.0 },
+        "distance": 100.0
+    },
+    "viewPlane": {
+        "width":        20,
+        "height":       20,
+        "pixelSize":    0.05
+    },
+    "backgroundColor": { "r":0.2, "g":0.2, "b":0.2 },
+    "ambientColor": { "r":0.1, "g":0.1, "b":0.1 },
+    "materials": [
+        {
+            "type":"phong",
+            "diffuseColor":{"r":0.8, "g":0.5, "b":0.5},
+            "specularColor": { "r":1.0, "g":1.0, "b":1.0 },
+            "exponent": 64.0
+        }
+    ],
+    "objects": [
+        { 
+            "materialIdx":0,
+            "type":"function",
+            "functions":[
+                { 
+                    "lib":"libnoise", 
+                    "name":"mountainTerrainBase" ,
+                    "type":"ridgedmulti"
+                },
+                { 
+                    "lib":"libnoise", 
+                    "name":"mountainTerrain" ,
+                    "type":"scale",
+                    "scale":"2",
+                    "source0":"mountainTerrainBase"
+                },                
+                { 
+                    "lib":"libnoise", 
+                    "name":"baseFlatTerrain",
+                    "type":"billow",
+                    "frequency":"2.0"
+                },
+                { 
+                    "lib":"libnoise", 
+                    "name":"flatTerrain",
+                    "type":"scale",
+                    "scale":"0.250",
+                    "bias":"-0.75",
+                    "source0":"baseFlatTerrain"
+                },
+                { 
+                    "lib":"libnoise", 
+                    "name":"terrainType",
+                    "type":"perlin",
+                    "frequency":"0.5",
+                    "persistence":"0.25"
+                },
+                { 
+                    "lib":"libnoise", 
+                    "name":"finalTerrain",
+                    "type":"select",
+                    "edgeFalloff":"0.125",
+                    "lower":"0.0",
+                    "upper":"1000.0",
+                    "source0":"flatTerrain", 
+                    "source1":"mountainTerrain",
+                    "control":"terrainType"
+                }                
+            ]
+        }
+    ],
+    "lights" : [
+        {
+            "type":"DirectionalLight",
+            "position":     { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "direction":    { "x":-1.0, "y": 0.0, "z": -1.0 },
+            "color":        { "r": 1.0, "g": 1.0, "b": 1.0 },
+            "attenuation":  { "r": 0.1, "g": 0.1, "b": 0.1 }
+        }
+    ],
+"__comment" : "
+        {
+            \"type\":\"phong\",
+            \"diffuseColor\":  { \"r\":0.0, \"g\":0.5, \"b\":1.0 },
+            \"specularColor\": { \"r\":1.0, \"g\":1.0, \"b\":1.0 },
+            \"exponent\": 64.0
+        }
+
+
+        {
+            \"materialIdx\":0,
+            \"type\":\"plane\",
+            \"normal\": {\"x\":0, \"y\":0, \"z\":1}, 
+            \"offset\": 1 
+        }
+
+
+        {
+            \"type\":\"PointLight\",
+            \"position\":     { \"x\": 2.5, \"y\": 2.5, \"z\":-1.0 },
+            \"color\":        { \"r\": 1.0, \"g\": 1.0, \"b\": 1.0 },
+            \"attenuation\":  { \"r\": 0.1, \"g\": 0.1, \"b\": 0.1 }
+        },
+        {
+            \"type\":\"PointLight\",
+            \"position\":     { \"x\": 0.5, \"y\": 0.5, \"z\": 1.0 },
+            \"color\":        { \"r\": 1.0, \"g\": 1.0, \"b\": 1.0 },
+            \"attenuation\":  { \"r\": 0.1, \"g\": 0.1, \"b\": 0.1 }
+        }
+
+"    
+}
