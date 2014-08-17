@@ -1,6 +1,6 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
 
 #include "simple_perspective_camera.h"

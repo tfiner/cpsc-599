@@ -1,6 +1,6 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
 // This file contains the one and only scene object.
 //

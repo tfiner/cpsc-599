@@ -1,6 +1,6 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
 // Named after the Van Gogh painting The Starry Night, this background
 // sampler renders stars.

@@ -1,6 +1,6 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
 // This file abstracts away the ray tracing algorithms into an abstraction of
 // scene sampling using a ray as a source.  This is an example of the Strategy Pattern.

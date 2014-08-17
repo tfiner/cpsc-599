@@ -1,6 +1,6 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
 
 #include "noise_factory.h"
