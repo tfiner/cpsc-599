@@ -56,39 +56,4 @@ Choices for renderer:
 
     3. Run as a net service (TCP), maybe even run as 2, but with a python server.
 
-Researched a few options for bindings, Pyrex, Cython and Boost Python.
 
-1. Boost Python, claims to wrap almost all C++ with a minimum of work.
-    a. Need to install (I'm using brew on OS X).
-    Realized my install of boost was lacking boost_python, found a page for mapnik that had the incantation:
-    https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
-
-    brew uninstall boost
-    brew install --build-from-source boost
-
-But I noticed that --without-python went past on the build messages and decided to Ctrl C and check the options myself with:
-    brew info boost
-
-    brew install --with-python --without-static --without-single boost    
-
-    After 4.5 minutes, success!
-
-    otool -L `brew list boost | grep python-mt.dylib` | grep -i python
-    /usr/local/Cellar/boost/1.55.0_2/lib/libboost_python-mt.dylib:
-        /usr/local/lib/libboost_python-mt.dylib (compatibility version 0.0.0, current version 0.0.0)
-        /System/Library/Frameworks/Python.framework/Versions/2.7/Python (compatibility version 2.7.0, current version 2.7.5)
-
-    b. Compiling the boost python tutorial.
-    1st, I really hate boost documentation, its always out of date and usually wrong.  In this case both.
-    bjam is a horrible build tool that is awfully documented too.  I spent an hour or two trying to get their stupid
-    too to work on OS X 10.9 Mavericks.  Yikes.
-
-    Here's the actualy way that worked:
-    clang++ -I $(python-config --includes) -shared -undefined dynamic_lookup $(python-config --libs) -l boost_python-mt hello.cpp -o hello_ext.so    
-
-    python hello.py
-    hello, world
-
-    Works.  No to try some bigger examples.
-
-    

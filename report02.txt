@@ -1,0 +1,48 @@
+
+Researched a few options for bindings, Pyrex, Cython and Boost Python.
+
+1. Boost Python, claims to wrap almost all C++ with a minimum of work.
+    a. Need to install (I'm using brew on OS X).
+    Realized my install of boost was lacking boost_python, found a page for mapnik that had the incantation:
+    https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
+
+    brew uninstall boost
+    brew install --build-from-source boost
+
+But I noticed that --without-python went past on the build messages and decided to Ctrl C and check the options myself with:
+    brew info boost
+
+    brew install --with-python --without-static --without-single boost    
+
+    After 4.5 minutes, success!
+
+    otool -L `brew list boost | grep python-mt.dylib` | grep -i python
+    /usr/local/Cellar/boost/1.55.0_2/lib/libboost_python-mt.dylib:
+        /usr/local/lib/libboost_python-mt.dylib (compatibility version 0.0.0, current version 0.0.0)
+        /System/Library/Frameworks/Python.framework/Versions/2.7/Python (compatibility version 2.7.0, current version 2.7.5)
+
+    b. Compiling the boost python tutorial.
+    1st, I really hate boost documentation, its always out of date and usually wrong.  In this case both.
+    bjam is a horrible build tool that is awfully documented too.  I spent an hour or two trying to get their stupid
+    too to work on OS X 10.9 Mavericks.  Yikes.
+
+    Here's the actualy way that worked:
+    clang++ -I $(python-config --includes) -shared -undefined dynamic_lookup $(python-config --libs) -l boost_python-mt hello.cpp -o hello_ext.so    
+
+    python hello.py
+    hello, world
+
+    Works.  No to try some bigger examples.
+
+2. Checking out PyQt with Scintilla as a JS syntax highlighter.  Very simple.  Installed PyQt via brew and grabbed an example of PyQt using scintilla from Ely Bendersky's website.  
+
+pyqt\qsci.py
+
+3. Python mini frameworks: bottle.
+
+The simple hello world was pretty neat.  I tried a more involved example that serves a static PNG and ran into all kinds of path problems and documentation snafus.  Nothing kills excitement faster in a new library than crappy documentation.
+
+4. Python mini frameworks: flask.
+
+Was able to generate a PNG on the fly and send it back to a web page.  The default debugging page for flask is really, really cool.  The framework autoreloads python modules too, the documentation is alright too.  I'm pretty excited about it.
+
