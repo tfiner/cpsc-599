@@ -1,8 +1,7 @@
 // Tim Finer 
 // tfiner@csu.fullerton.edu
-// CPSC-566
+// CPSC-599
 //
-// This file is the main entry point for assignment 1.
 
 #include "factory.h"
 #include "scene_loader.h"
@@ -27,6 +26,7 @@ using namespace std;
 using namespace glow;
 
 int logVerbosity = 0;
+const char* VERSION_STR = "Glow 0.5.0";
 
 
 namespace {
@@ -39,7 +39,7 @@ namespace {
         return option.arg == 0 ? option::ARG_ILLEGAL : option::ARG_OK;
     }
 
-    enum  optionIndex { UNKNOWN, HELP, INPUT, OUTPUT, DEPTH, VERBOSE, PARSE };
+    enum  optionIndex { UNKNOWN, HELP, INPUT, OUTPUT, DEPTH, VERBOSE, VERSION, PARSE };
     const option::Descriptor usage[] = {
         {UNKNOWN, 0,    "" ,    ""    ,         option::Arg::None,     "USAGE: example [options]\n\nOptions:" },
         {HELP,    0,    "h" ,   "help",         option::Arg::None,     "  --help,      -h  \tPrint usage and exit." },
@@ -47,9 +47,10 @@ namespace {
         {OUTPUT,  0,    "o",    "output",       Required,              "  --output,    -o  \tThe file name of the rendering (required)." },
         {DEPTH,   0,    "d",    "depth",        Required,              "  --depth,     -d  \tThe file name of a depth image (optional)." },
         {VERBOSE, 0,    "v",    "verbose",      option::Arg::None,     "  --verbose,   -v  \tIncrease verbosity count (default: 0)." },
+        {VERSION, 0,    "",     "version",      option::Arg::None,     "  --version,       \tDisplays the version information." },
         {PARSE,   0,    "p",    "parseOnly",    option::Arg::None,     "  --parseOnly, -p  \tJust parse the scene file, don't render anything." },
         {UNKNOWN, 0,    "" ,    ""   ,          option::Arg::None,     "\nExamples:\n"
-                                                 "  raytracer --input scene.txt --output scene.png" },
+                                                 "  glow --input scene.txt --output scene.png" },
         {0,0,0,0,0,0}
     };
     auto const NUM_USAGE = sizeof(usage) / sizeof(usage[0]);
@@ -130,6 +131,11 @@ namespace {
 
         if (options[HELP] || argc == 0) {
             option::printUsage(std::cout, usage);
+            return 0;
+        }
+
+        if (options[VERSION]){
+            cout << VERSION_STR << "\n";
             return 0;
         }
 
