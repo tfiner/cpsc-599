@@ -46,3 +46,19 @@ The simple hello world was pretty neat.  I tried a more involved example that se
 
 Was able to generate a PNG on the fly and send it back to a web page.  The default debugging page for flask is really, really cool.  The framework autoreloads python modules too, the documentation is alright too.  I'm pretty excited about it.
 
+Building Glow (was raytracer in 566):
+
+I recently got rid of my macports and old fink directories and switched to homebrew.  I needed to rebuild some of the dependencies for glow:
+
+brew install --HEAD eigen
+brew install --c++11 tbb
+brew install libpng
+
+git submodule add https://github.com/rabauke/trng4.git trng
+mkdir build
+cd build
+./configure && make && make --install
+
+cp -r cajun-2.0.2/json /usr/local/include
+
+
