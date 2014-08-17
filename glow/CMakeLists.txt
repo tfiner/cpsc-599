@@ -21,6 +21,7 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 
 
 # set (Boost_DEBUG ON)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 
 find_package( ZLIB REQUIRED )
 set( PNG_LIBRARY /Library/Frameworks/UnixImageIO.framework/unix/lib/libpng15.dylib )
@@ -30,8 +31,17 @@ message( STATUS "   version:  ${PNG_VERSION} ")
 message( STATUS "   includes: ${PNG_INCLUDE_DIR} ")
 message( STATUS "   libs:     ${PNG_LIBRARY} ")
 
+find_package(PythonDev REQUIRED)
+include_directories( ${PYTHON_INCLUDE_DIR} )
+
 set(EIGEN3_INCLUDE_DIR "/usr/local/include/eigen3" CACHE FILEPATH "Path to Eigen3")
 include_directories( "${EIGEN3_INCLUDE_DIR}" )
+
+set(Boost_USE_STATIC_LIBS OFF) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME OFF) 
+find_package(Boost 1.55.0 COMPONENTS python) 
+message( STATUS "Boost libs: '${Boost_LIBRARIES}'" )
 
 set(BOOST_INCLUDE_DIR "/usr/local/include/boost" CACHE FILEPATH "Path to Boost")
 include_directories( ${Boost_INCLUDE_DIRS} )
@@ -65,6 +75,7 @@ set(SRCS
     src/perspective_camera.cpp
     src/phong.cpp
     src/plane.cpp
+    src/pyglow.cpp
     src/recorder_png.cpp
     src/sampler_uniform.cpp
     src/scene.cpp
@@ -85,9 +96,10 @@ set(GLO_SRC
     src/main.cpp
 )
 
+
 # libglow.dynlib or .so or .dll
 add_library( glow SHARED ${SRCS} ${NOISE_UTIL} )
-target_link_libraries( glow ${PNG_LIBRARY} tbb trng4 ${LIBNOISE_LIB_DIR}/libnoise.a )
+target_link_libraries( glow ${PNG_LIBRARY} tbb trng4 ${LIBNOISE_LIB_DIR}/libnoise.a ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 # glo, the executable
 add_executable( glo ${GLO_SRC} )
