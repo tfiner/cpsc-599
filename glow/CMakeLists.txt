@@ -14,6 +14,12 @@ message( STATUS "CMake detected OS '${CMAKE_SYSTEM_NAME}'" )
 
 message( STATUS "Building using '${CMAKE_CXX_COMPILER}'" )
 
+# Update the documentation string of CMAKE_BUILD_TYPE for GUIs
+SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
+"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+    FORCE )
+
+
 # set (Boost_DEBUG ON)
 
 find_package( ZLIB REQUIRED )
@@ -31,19 +37,14 @@ set(BOOST_INCLUDE_DIR "/usr/local/include/boost" CACHE FILEPATH "Path to Boost")
 include_directories( ${Boost_INCLUDE_DIRS} )
 message( STATUS "Boost inc: '${Boost_INCLUDE_DIRS}'" )
 
-set(LIBNOISE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libnoise/include")
+set(LIBNOISE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libnoisesrc-1.0.0/noise/include")
+set(LIBNOISE_LIB_DIR "${CMAKE_SOURCE_DIR}/libnoisesrc-1.0.0/noise/${CMAKE_BUILD_TYPE}")
 include_directories( ${LIBNOISE_INCLUDE_DIR} )
 
 set(NOISEUTILS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/noiseutils")
 include_directories( ${NOISEUTILS_INCLUDE_DIR} )
 
-
-# Update the documentation string of CMAKE_BUILD_TYPE for GUIs
-SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-    FORCE )
-
-set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -isystem /usr/local/include" )
+set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -isystem /usr/local/include -fdiagnostics-fixit-info" )
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb3 -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O0 -DNDEBUG")
 
@@ -80,6 +81,6 @@ set(NOISE_UTIL
     noiseutils/noiseutils.cpp
     )
 
-add_executable( raytracer ${SRCS} ${NOISE_UTIL} )
-target_link_libraries( raytracer ${PNG_LIBRARY} tbb trng4 ${CMAKE_SOURCE_DIR}/libnoise/${CMAKE_BUILD_TYPE}/libnoise.a )
+add_executable( glow ${SRCS} ${NOISE_UTIL} )
+target_link_libraries( glow ${PNG_LIBRARY} tbb trng4 ${LIBNOISE_LIB_DIR}/libnoise.a )
 
