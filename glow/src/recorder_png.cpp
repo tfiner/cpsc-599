@@ -203,7 +203,7 @@ void RecorderPng::Init() {
                  );
 
     png_text  text[1];
-    text[0].key         = (png_charp)("566-tf-scene");
+    text[0].key         = (png_charp)("599-tf-scene");
     text[0].text        = (png_charp)(comment_.c_str());
     text[0].compression = PNG_TEXT_COMPRESSION_NONE;
     png_set_text(png_ptr_, png_info_ptr_, text, 1);
