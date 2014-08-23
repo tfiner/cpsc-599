@@ -1,3 +1,4 @@
 *.pyc
 *.so
 glow/debug/
+*.bmp
