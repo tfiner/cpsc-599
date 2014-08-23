@@ -24,8 +24,8 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 
 find_package( ZLIB REQUIRED )
-set( PNG_LIBRARY /Library/Frameworks/UnixImageIO.framework/unix/lib/libpng15.dylib )
-set( PNG_INCLUDE_DIR  /Library/Frameworks/UnixImageIO.framework/unix/include )
+find_package( PNG REQUIRED )
+
 message( STATUS "Found PNG: ")
 message( STATUS "   version:  ${PNG_VERSION} ")
 message( STATUS "   includes: ${PNG_INCLUDE_DIR} ")
