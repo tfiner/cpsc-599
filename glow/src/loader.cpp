@@ -121,10 +121,10 @@ namespace glow {
         return 0;
     }
 
+    int CommandLineRun(int argc, char** argv) {
+        argc-=(argc>0); 
+        argv+=(argc>0); // skip program name argv[0] if present
 
-    int run(int argc, char** argv) {
-        using namespace boost::posix_time;
-        argc-=(argc>0); argv+=(argc>0); // skip program name argv[0] if present
         option::Stats  stats(usage, argc, argv);
         option::Option options[NUM_USAGE], buffer[NUM_USAGE];
         option::Parser parse(usage, argc, argv, options, buffer);
@@ -151,6 +151,8 @@ namespace glow {
             option::printUsage(std::cout, usage);
             return -1;
         }
+
+        using namespace boost::posix_time;
 
         SceneParams sp;
         std::string sceneText;
@@ -179,6 +181,7 @@ namespace glow {
         }
 
         {
+            LOG_MSG(1, "Setting recorder PNG");
             auto colorRecorder = RecorderPtr( 
                 new RecorderPng(options[OUTPUT].arg, px, py, 8, sceneText.c_str()) 
             );
@@ -192,6 +195,7 @@ namespace glow {
             scene->SetDepthRecorder( depthRecorder );
         }
         
+        LOG_MSG(1, "Begin render...");
         auto renderBegin = microsec_clock::local_time().time_of_day();
         scene->GetCamera()->Render( *scene );
         auto renderEnd = microsec_clock::local_time().time_of_day();
@@ -201,5 +205,17 @@ namespace glow {
 
         return 0;
     }
+
+
+    int Run(const std::vector<std::string>& args) {
+        // While we are in this function, the pointers will be valid.
+        std::vector<char*> argv;
+        std::transform(args.cbegin(), args.cend(), std::back_inserter(argv), 
+            [](const std::string& s){ return const_cast<char*>(s.c_str()); }
+        );
+        auto argc = argv.size();
+        return CommandLineRun(argc, argv.data());
+    }    
+
 
 } // glow

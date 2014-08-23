@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     int res = 0;
 
     try {
-        res = glow::run(argc, argv);
+        res = glow::CommandLineRun(argc, argv);
 
     } catch(...) {
         glow::UnwindDumpException();
