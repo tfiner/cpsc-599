@@ -9,13 +9,13 @@ require.config({
         // Also, the path should NOT include
         // the '.js' file extension.
         jquery: 'jquery-1.11.1.min',
-        jquery_ui: 'jquery-ui.min',
-        dockspawn: 'dockspawn'
+        dockspawn: 'dockspawn',
+        jsoneditor: 'jsoneditor.min'
     }
 });
 
-requirejs(['jquery', 'jquery_ui', 'dockspawn'],
-function($) {
+requirejs(['jquery', 'dockspawn', 'jsoneditor'],
+function($, ds, JSONEditor) {
     console.log("All loaded.");
 
     // Convert a div to the dock manager.  Panels can then be docked on to it
@@ -37,19 +37,29 @@ function($) {
     // They can then be docked on to the dock manager
     // Panels get a titlebar and a close button, and can also be
     // converted to a floating dialog box which can be dragged / resized
-    var properties = new dockspawn.PanelContainer($("#properties_window")[0], dockManager);
-    var problems = new dockspawn.PanelContainer($("#problems_window")[0], dockManager);
-    var editor1 = new dockspawn.PanelContainer($("#editor1_window")[0], dockManager);
-    var outline = new dockspawn.PanelContainer($("#outline_window")[0], dockManager);
-    var render = new dockspawn.PanelContainer($("#render_window")[0], dockManager);
 
-    // Dock the panels on the dock manager
-    var documentNode = dockManager.context.model.documentManagerNode;
+    var status = new dockspawn.PanelContainer($("#status_window")[0], dockManager);
 
-    var propertiesNode = dockManager.dockLeft(documentNode, properties, 0.6);
-    var problemsNode = dockManager.dockRight(documentNode, problems, 0.40);
-    var editor1Node = dockManager.dockFill(documentNode, editor1);
-    var outlineNode = dockManager.dockDown(documentNode, outline, 0.2);
-    var renderNode = dockManager.dockFill(documentNode, render);
+    var editorDiv = $("#editor1_window")[0],
+        editor = new JSONEditor(editorDiv);
+
+    editor.set({
+      'array': [1, 2, 3],
+      'boolean': true,
+      'null': null,
+      'number': 123,
+      'object': {'a': 'b', 'c': 'd'},
+      'string': 'Hello World'
+    });    
+
+    var editor1 = new dockspawn.PanelContainer(editorDiv, dockManager),
+        noise = new dockspawn.PanelContainer($("#noise_window")[0], dockManager),
+        render = new dockspawn.PanelContainer($("#render_window")[0], dockManager);
+
+    var documentNode = dockManager.context.model.documentManagerNode,
+        statusNode = dockManager.dockDown(documentNode, status, 0.1),
+        renderNode = dockManager.dockFill(documentNode, render),
+        noiseNode = dockManager.dockLeft(renderNode, noise, 0.25),
+        editor1Node = dockManager.dockUp(noiseNode, editor1, 0.5);
 });
 
