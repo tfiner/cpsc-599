@@ -1,0 +1,21 @@
+bibliography
+
+end note
+
+bibdesk
+
+bib tech
+edit/paste
+
+put it into a document
+abstract / notes
+
+what was done 
+what I'm going differently
+what Ive done
+results
+
+network editor
+pure data
+
+map reduce

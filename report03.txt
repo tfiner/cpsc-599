@@ -1,0 +1,32 @@
+Third Report
+
+I got python and C++ talking!  
+
+1. Refactored the C++ glow code into a command line driver and a shared library.
+2. Wrote a very simple python list to std::vector wrapper
+3. Wrapped the main call to load and render a scene using boost python.
+4. Wrote a test python module that calls glow's renderer:
+
+cmdLine = "glow --input scenes/mud.json --output=mud-py.png --verbose"
+
+if __name__ == "__main__":
+    import sys
+    sys.path.append('debug')
+
+    import glow
+    glow.run(cmdLine.split())
+
+Initially I had a crash while rendering.  At first I was concerned about the boost python bindings, but after some tests, I found that the C++ command line crashed as well.  I had updated the OS since the last time I had attempted to run it to Mavericks, and the PNG library had changed.
+
+The png version I linked to was not the same version that was being called.  Once I took the explicit PNG link statement out of the CMakeLists.txt file, Cmake found the same version that was being loaded and everything worked! 
+
+
+User Interface
+
+I looked at UI frameworks and was seduced by all of the widgets and frameworks.  I spent too much time playing with demos instead of focusing on the task at hand: choosing enough to get the job done.  
+
+I looked at YUI (Yahoo's user interface), AngularJS, jQueryUI, and a few others.
+
+I decided to use jQueryUI with some plugins, it does a fine job and the needs of this project's don't require a lot of widgets.
+
+
