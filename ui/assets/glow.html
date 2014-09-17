@@ -1,17 +1,23 @@
 <html>
     <head>
         <script data-main="js/main.js" src="js/require.js"></script>
-        <link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
+
+        <!-- Dock Spawn -->
+        <link rel="stylesheet" href="css/font-awesome.css"> 
+        <link rel="stylesheet" href="css/dock-manager.css">
+
      </head>
 
     <body>
-        <div class="ui-layout-center">Renderings go here</div>
-        <!-- <div class="ui-layout-north">North</div> -->
-        <div class="ui-layout-south">Status messages go here...</div>
-        <div>
-            <div id="east">East</div>
-            <div id="west">West</div>
-        <div>
+
+    <div id="my_dock_manager" class="my-dock-manager"></div>
+    <div id="properties_window" caption="Properties" class="properties-window"></div>
+    <div id="problems_window" caption="Problems" class="problems-window"></div>
+    <div id="editor1_window" caption="Steering.h" class="editor1-window editor-host"></div>    
+    <div id="outline_window" caption="Outline" class="outline-window"></div>
+    <div id="render_window" caption="Render" class="render-window"></div>
+
+
     </body>
 
 </html>
