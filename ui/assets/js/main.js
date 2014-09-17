@@ -10,56 +10,135 @@ require.config({
         // the '.js' file extension.
         jquery: 'jquery-1.11.1.min',
         dockspawn: 'dockspawn',
-        jsoneditor: 'jsoneditor.min'
+        jsoneditor: 'jsoneditor.min',
+        cytoscape: 'cytoscape.min',
     }
 });
 
-requirejs(['jquery', 'dockspawn', 'jsoneditor'],
-function($, ds, JSONEditor) {
-    console.log("All loaded.");
+requirejs(
+    ['jquery', 'dockspawn', 'jsoneditor', 'cytoscape'],
 
-    // Convert a div to the dock manager.  Panels can then be docked on to it
-    var divDockManager = $("#my_dock_manager")[0],
-        dockManager = new dockspawn.DockManager(divDockManager);
+    function($, ds, JSONEditor) {
+        console.log("All loaded.");
 
-    dockManager.initialize();
+        // Convert a div to the dock manager.  Panels can then be docked on to it
+        var divDockManager = $("#my_dock_manager")[0],
+            dockManager = new dockspawn.DockManager(divDockManager);
 
-    // Let the dock manager element fill in the entire screen
-    var onResized = function(e) {
-        dockManager.resize(
-            window.innerWidth - (divDockManager.clientLeft + divDockManager.offsetLeft), 
-            window.innerHeight - (divDockManager.clientTop + divDockManager.offsetTop));
+        dockManager.initialize();
+
+        // Let the dock manager element fill in the entire screen
+        var onResized = function(e) {
+            dockManager.resize(
+                window.innerWidth - (divDockManager.clientLeft + divDockManager.offsetLeft), 
+                window.innerHeight - (divDockManager.clientTop + divDockManager.offsetTop));
+        }
+        window.onresize = onResized;
+        onResized(null);
+
+        // Convert existing elements on the page into "Panels".
+        // They can then be docked on to the dock manager
+        // Panels get a titlebar and a close button, and can also be
+        // converted to a floating dialog box which can be dragged / resized
+
+        var status = new dockspawn.PanelContainer($("#status_window")[0], dockManager);
+
+        var editorDiv = $("#editor1_window")[0],
+            editor = new JSONEditor(editorDiv);
+
+        editor.set({
+          'array': [1, 2, 3],
+          'boolean': true,
+          'null': null,
+          'number': 123,
+          'object': {'a': 'b', 'c': 'd'},
+          'string': 'Hello World'
+        });
+
+        $('#noise_window').cytoscape({
+          style: cytoscape.stylesheet()
+            .selector('node')
+              .css({
+                'content': 'data(name)',
+                'text-valign': 'center',
+                'color': 'white',
+                'text-outline-width': 2,
+                'text-outline-color': '#888'
+              })
+            .selector('edge')
+              .css({
+                'target-arrow-shape': 'triangle'
+              })
+            .selector(':selected')
+              .css({
+                'background-color': 'black',
+                'line-color': 'black',
+                'target-arrow-color': 'black',
+                'source-arrow-color': 'black'
+              })
+            .selector('.faded')
+              .css({
+                'opacity': 0.25,
+                'text-opacity': 0
+              }),
+          
+          elements: {
+            nodes: [
+              { data: { id: 'j', name: 'Jerry' } },
+              { data: { id: 'e', name: 'Elaine' } },
+              { data: { id: 'k', name: 'Kramer' } },
+              { data: { id: 'g', name: 'George' } }
+            ],
+            edges: [
+              { data: { source: 'j', target: 'e' } },
+              { data: { source: 'j', target: 'k' } },
+              { data: { source: 'j', target: 'g' } },
+              { data: { source: 'e', target: 'j' } },
+              { data: { source: 'e', target: 'k' } },
+              { data: { source: 'k', target: 'j' } },
+              { data: { source: 'k', target: 'e' } },
+              { data: { source: 'k', target: 'g' } },
+              { data: { source: 'g', target: 'j' } }
+            ]
+          },
+          
+          layout: {
+            name: 'grid',
+            padding: 10
+          },
+          
+          ready: function(){
+            window.cy = this;
+            
+            // giddy up...
+            
+            cy.elements().unselectify();
+            
+            cy.on('tap', 'node', function(e){
+              var node = e.cyTarget; 
+              var neighborhood = node.neighborhood().add(node);
+              
+              cy.elements().addClass('faded');
+              neighborhood.removeClass('faded');
+            });
+            
+            cy.on('tap', function(e){
+              if( e.cyTarget === cy ){
+                cy.elements().removeClass('faded');
+              }
+            });
+          }
+        });        
+
+        var editor1 = new dockspawn.PanelContainer(editorDiv, dockManager),
+            noise = new dockspawn.PanelContainer($("#noise_window")[0], dockManager),
+            render = new dockspawn.PanelContainer($("#render_window")[0], dockManager);
+
+        var documentNode = dockManager.context.model.documentManagerNode,
+            statusNode = dockManager.dockDown(documentNode, status, 0.1),
+            renderNode = dockManager.dockFill(documentNode, render),
+            noiseNode = dockManager.dockLeft(renderNode, noise, 0.25),
+            editor1Node = dockManager.dockUp(noiseNode, editor1, 0.5);
     }
-    window.onresize = onResized;
-    onResized(null);
-
-    // Convert existing elements on the page into "Panels".
-    // They can then be docked on to the dock manager
-    // Panels get a titlebar and a close button, and can also be
-    // converted to a floating dialog box which can be dragged / resized
-
-    var status = new dockspawn.PanelContainer($("#status_window")[0], dockManager);
-
-    var editorDiv = $("#editor1_window")[0],
-        editor = new JSONEditor(editorDiv);
-
-    editor.set({
-      'array': [1, 2, 3],
-      'boolean': true,
-      'null': null,
-      'number': 123,
-      'object': {'a': 'b', 'c': 'd'},
-      'string': 'Hello World'
-    });    
-
-    var editor1 = new dockspawn.PanelContainer(editorDiv, dockManager),
-        noise = new dockspawn.PanelContainer($("#noise_window")[0], dockManager),
-        render = new dockspawn.PanelContainer($("#render_window")[0], dockManager);
-
-    var documentNode = dockManager.context.model.documentManagerNode,
-        statusNode = dockManager.dockDown(documentNode, status, 0.1),
-        renderNode = dockManager.dockFill(documentNode, render),
-        noiseNode = dockManager.dockLeft(renderNode, noise, 0.25),
-        editor1Node = dockManager.dockUp(noiseNode, editor1, 0.5);
-});
+);
 
