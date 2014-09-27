@@ -2,4 +2,4 @@
 
 # This script starts the backend server and then launches the 
 # user interface for OS X machines.
-open assets/html/glow.html
+open assets/glow.html

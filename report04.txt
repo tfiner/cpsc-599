@@ -1,0 +1,15 @@
+Hooking up the UI
+
+Goals:
+
+1. Set up flask server to send user interface to web browser.
+
+2. UI outstanding
+    a. Fix network pane (non-interactive)
+    b. Add Submit button
+
+3. Connect user interface to server.
+    a. Status
+    b. Network
+    c. JSON editor
+    d. Render
