@@ -10,6 +10,7 @@ Goals:
 2. UI outstanding
     a. Fix network pane (non-interactive)
     b. Add Submit button
+        To see if the docking library could handle multiple items, split the json editor panel into its own div, added a parent div, added some text, this didn't work - the layout code assumes one div I think and the editor bleeds into the pane below.
 
 3. Connect user interface to server.
     a. Status
