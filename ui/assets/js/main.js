@@ -9,6 +9,7 @@ require.config({
         // Also, the path should NOT include
         // the '.js' file extension.
         jquery: 'jquery-1.11.1.min',
+        jquery_ui: 'jquery-ui.min',
         dockspawn: 'dockspawn',
         jsoneditor: 'jsoneditor.min',
         cytoscape: 'cytoscape.min',
@@ -16,10 +17,13 @@ require.config({
 });
 
 requirejs(
-    ['jquery', 'dockspawn', 'jsoneditor', 'cytoscape'],
+    ['jquery', 'jquery_ui', 'dockspawn', 'jsoneditor', 'cytoscape'],
 
-    function($, ds, JSONEditor) {
+    function($, _, ds, JSONEditor) {
         console.log("All loaded.");
+
+        // Turn on tooltips, ugh these are annoying.
+        // $( document ).tooltip();
 
         // Convert a div to the dock manager.  Panels can then be docked on to it
         var divDockManager = $("#my_dock_manager")[0],
