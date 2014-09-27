@@ -9,15 +9,22 @@ app = Flask(__name__, static_folder='assets')
 def root():
     return app.send_static_file('glow.html')    
 
+# TODO:1 these two handlers might not be necessary.
 @app.route('/js/<path:path>')
 def static_js_proxy(path):
-    # send_static_file will guess the correct MIME type
     return app.send_static_file(os.path.join('js', path))
 
 @app.route('/css/<path:path>')
 def static_css_proxy(path):
-    # send_static_file will guess the correct MIME type
     return app.send_static_file(os.path.join('css', path))
+
+@app.route('/font/<path:path>')
+def static_font_proxy(path):
+    return app.send_static_file(os.path.join('font', path))
+
+@app.route('/images/<path:path>')
+def static_images_proxy(path):
+    return app.send_static_file(os.path.join('images', path))
 
 if __name__ == "__main__":
     app.debug = True
