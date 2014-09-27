@@ -8,11 +8,12 @@ require.config({
         // the jQuery file, relative to baseUrl.
         // Also, the path should NOT include
         // the '.js' file extension.
-        jquery: 'jquery-1.11.1.min',
-        jquery_ui: 'jquery-ui.min',
-        dockspawn: 'dockspawn',
+        jquery:     'jquery-1.11.1.min',
+        jquery_ui:  'jquery-ui.min',
+        dockspawn:  'dockspawn',
         jsoneditor: 'jsoneditor.min',
-        cytoscape: 'cytoscape.min',
+        cytoscape:  'cytoscape.min',
+        jq_resize:  'jquery.resize'
     }
 });
 
@@ -55,7 +56,7 @@ requirejs(
             noiseNode = dockManager.dockLeft(renderNode, noise, 0.25),
             editor1Node = dockManager.dockUp(noiseNode, editor1, 0.5);
     }
-        );
+);
 
 requirejs(
     ['jquery', 'cytoscape'],
@@ -122,20 +123,20 @@ requirejs(
             console.log("cytoscape ready...");
 //            window.cy = this;
           }
-            
+
         });     
     }
 );
-            
+
 requirejs(
     ['jquery', 'jsoneditor'],
-            
+
     function($, JSONEditor) {
         console.log("Editor loaded.");
-              
+
         var editorDiv = $("#editor1_window")[0],
             editor = new JSONEditor(editorDiv);
-            
+
         // Drag and drop support for the json editor.
         editorDiv.addEventListener(
           'dragover', 
@@ -174,11 +175,23 @@ requirejs(
 
         editor.set({
           'msg': 'Drag and drop a glow scene JSON file here.'
-            });
-          }
+        });      
+    }
 );
 
 
+requirejs(
+    ['jquery', 'jq_resize'],
+
+    function($, cytoscape) {
+      console.log('Resizer loaded.');
+
+      $('#noise_window').resize(function(e) { 
+        // console.log(e); 
+        if(window.cy)
+          window.cy.resize();
+          window.cy.fit();
+      });
     }
 );
 
