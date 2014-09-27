@@ -43,11 +43,9 @@ requirejs(
 
         var status = new dockspawn.PanelContainer($("#status_window")[0], dockManager);
 
-        var editorPaneDiv = $("#editor1_pane")[0], 
-            editorDiv = $("#editor1_window")[0],
+        var editorDiv = $("#editor1_window")[0],
             editor = new JSONEditor(editorDiv);
 
-        // TODO: get scene description
         editor.set({
           'array': [1, 2, 3],
           'boolean': true,
@@ -132,7 +130,7 @@ requirejs(
           }
         });        
 
-        var editor1 = new dockspawn.PanelContainer(editorPaneDiv, dockManager),
+        var editor1 = new dockspawn.PanelContainer(editorDiv, dockManager),
             noise = new dockspawn.PanelContainer($("#noise_window")[0], dockManager),
             render = new dockspawn.PanelContainer($("#render_window")[0], dockManager);
 
