@@ -46,13 +46,44 @@ requirejs(
         var editorDiv = $("#editor1_window")[0],
             editor = new JSONEditor(editorDiv);
 
+        // Drag and drop support for the json editor.
+        editorDiv.addEventListener(
+          'dragover', 
+          function(evt){
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+          }, 
+          false
+        );
+
+        editorDiv.addEventListener(
+          'drop', 
+          function(evt){
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var f = evt.dataTransfer.files[0],            
+                reader = new FileReader();
+
+            console.log("Reading file: ", f);
+
+            reader.onload = function(e) {
+              console.log("Finished reading file: ", e);              
+
+              var t = e.currentTarget.result,
+                  j = JSON.parse(t);
+
+              editor.set(j);
+            };
+
+            reader.readAsText(f); 
+          }, 
+          false
+        );
+
         editor.set({
-          'array': [1, 2, 3],
-          'boolean': true,
-          'null': null,
-          'number': 123,
-          'object': {'a': 'b', 'c': 'd'},
-          'string': 'Hello World'
+          'msg': 'Drag and drop a glow scene JSON file here.'
         });
 
         $('#noise_window').cytoscape({
