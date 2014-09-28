@@ -7,7 +7,7 @@
 
 
 define(
-    ['jquery', 'cytoscape', 'underscore', 'jq_resize'],
+    ['jquery', 'cytoscape', 'underscore'],
 
     function($, cytoscape, _) {
         console.log("Cytoscape loaded...");
@@ -42,78 +42,8 @@ define(
                         'text-opacity': 0
                     }),
 
-                elements: {
-                    nodes: [{
-                        data: {
-                            id: 'j',
-                            name: 'Jerry'
-                        }
-                    }, {
-                        data: {
-                            id: 'e',
-                            name: 'Elaine'
-                        }
-                    }, {
-                        data: {
-                            id: 'k',
-                            name: 'Kramer'
-                        }
-                    }, {
-                        data: {
-                            id: 'g',
-                            name: 'George'
-                        }
-                    }],
-                    edges: [{
-                        data: {
-                            source: 'j',
-                            target: 'e'
-                        }
-                    }, {
-                        data: {
-                            source: 'j',
-                            target: 'k'
-                        }
-                    }, {
-                        data: {
-                            source: 'j',
-                            target: 'g'
-                        }
-                    }, {
-                        data: {
-                            source: 'e',
-                            target: 'j'
-                        }
-                    }, {
-                        data: {
-                            source: 'e',
-                            target: 'k'
-                        }
-                    }, {
-                        data: {
-                            source: 'k',
-                            target: 'j'
-                        }
-                    }, {
-                        data: {
-                            source: 'k',
-                            target: 'e'
-                        }
-                    }, {
-                        data: {
-                            source: 'k',
-                            target: 'g'
-                        }
-                    }, {
-                        data: {
-                            source: 'g',
-                            target: 'j'
-                        }
-                    }]
-                },
-
                 layout: {
-                    name: 'cose',
+                    name: 'grid',
                     padding: 10
                 },
 
@@ -122,9 +52,10 @@ define(
                 }
             }),
 
+            // Given a glow JSON scene, turn it into nodes and edges that 
+            // cytoscape can render.
             parseJSON: function(j) {
                 console.log("Parse: ", j);
-                console.log("Now: ", _.now());
                 console.log("Tree: ", tree);
 
                 tree.cy.remove( tree.cy.elements() );
@@ -160,7 +91,6 @@ define(
                 var edges = [];
                 _.each(["source0", "source1", "control"],
                     function(srcName){
-                        console.log(srcName, funcs);
                         var targets = _.filter(funcs, srcName);
                         var e = _.map(targets, function(t) { 
                             return {
@@ -170,7 +100,6 @@ define(
                                 }
                             }; 
                         });
-                        console.log("e: ", e);
                         edges = edges.concat(e);
                     }
                 );
@@ -180,16 +109,20 @@ define(
                     nodes: nodes,
                     edges: edges
                 });
+            },
+
+            refresh: function() {
+                tree.cy.resize();
+                tree.cy.fit();
             }
         };
 
         console.log(tree);
 
-        $('#noise_window').resize(function(e) {
-            // console.log(e); 
-            tree.cy.resize();
-            tree.cy.fit();
-        });
+        // $('#noise_window').resize(function(e) {
+        //     // console.log(e);
+        //     tree.refresh(); 
+        // });
 
         return tree;
     }
