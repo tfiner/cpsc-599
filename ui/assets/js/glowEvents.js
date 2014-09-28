@@ -8,8 +8,8 @@
 
 // Prevent drag and drop from opening a json as a new web page.
 requirejs( ['jquery', 'editor', 'noiseTree'],
-  function($, glowEditor, glowNoiseTree) {
-    console.log("Events loaded...", glowEditor, glowNoiseTree);    
+  function($, editor, tree) {
+    console.log("Events loaded...", tree);    
 
     $(document).on('dragenter', function (e) {
         e.stopPropagation();
@@ -23,7 +23,6 @@ requirejs( ['jquery', 'editor', 'noiseTree'],
     });
 
     $(document).on('drop', function (e) {
-        console.log(e);
         e.stopPropagation();
         e.preventDefault();
 
@@ -39,8 +38,8 @@ requirejs( ['jquery', 'editor', 'noiseTree'],
           var t = e.currentTarget.result,
               j = JSON.parse(t);
 
-          glowEditor.editor.set(j);
-          glowNoiseTree.parseJSON(j);
+          editor.editor.set(j);
+          tree.parseJSON(j);
         };
 
         reader.readAsText(f); 

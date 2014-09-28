@@ -120,13 +120,67 @@ define(
                 ready: function() {
                     console.log("cytoscape ready...");
                 }
+            }),
 
-                parseJSON: function(j) {
-                    console.log("Parse: ", j);
-                    
-                },
+            parseJSON: function(j) {
+                console.log("Parse: ", j);
+                console.log("Now: ", _.now());
+                console.log("Tree: ", tree);
 
-            })
+                tree.cy.remove( tree.cy.elements() );
+                tree.cy.resize();
+
+                if (!_.has(j, 'objects')) {
+                    console.error("JSON missing objects array, ignoring.");
+                    return;
+                }
+
+                if (!_.isArray(j.objects) || j.objects.length == 0) {
+                    console.error("JSON 'objects' is not an array, or doesn't have any elements, ignoring.");
+                    return;
+                }
+
+                console.log("objs: ", j.objects.length, j.objects);
+                if (!_.has(j.objects[0], 'functions') || !_.isArray(j.objects[0].functions)) {
+                    console.error("JSON missing objects[0].functions array, ignoring.");
+                    return;                    
+                }
+
+                var funcs = j.objects[0].functions;
+                var nodes = _.map(funcs, function(fn) { 
+                    return {
+                        data: {
+                            id: fn.name,
+                            name: fn.name,
+                        }
+                    }; 
+                });
+                console.log("Nodes: ", nodes);
+
+                var edges = [];
+                _.each(["source0", "source1", "control"],
+                    function(srcName){
+                        console.log(srcName, funcs);
+                        var targets = _.filter(funcs, srcName);
+                        var e = _.map(targets, function(t) { 
+                            return {
+                                data: {
+                                    source: t[srcName],
+                                    target: t.name
+                                }
+                            }; 
+                        });
+                        console.log("e: ", e);
+                        edges = edges.concat(e);
+                    }
+                );
+                console.log("edges: ", edges);
+
+                tree.cy.load({
+                    nodes: nodes,
+                    edges: edges
+                });
+            }
         };
 
         console.log(tree);

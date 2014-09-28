@@ -14,7 +14,7 @@ require.config({
         jsoneditor: 'jsoneditor.min',
         cytoscape:  'cytoscape.min',
         jq_resize:  'jquery.resize',
-        underscore: 'underscore'
+        underscore: 'underscore',
 
         editor:     'glowEditor',
         noiseTree:  'glowNoiseTree',
