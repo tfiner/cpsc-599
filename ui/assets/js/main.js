@@ -13,7 +13,12 @@ require.config({
         dockspawn:  'dockspawn',
         jsoneditor: 'jsoneditor.min',
         cytoscape:  'cytoscape.min',
-        jq_resize:  'jquery.resize'
+        jq_resize:  'jquery.resize',
+        underscore: 'underscore'
+
+        editor:     'glowEditor',
+        noiseTree:  'glowNoiseTree',
+        events:     'glowEvents'
     }
 });
 
@@ -59,139 +64,8 @@ requirejs(
 );
 
 requirejs(
-    ['jquery', 'cytoscape'],
-
-    function($, cytoscape) {
-        console.log("Cytoscape loaded...");
-
-        window.cy = cytoscape({
-          container: $('#noise_window')[0],
-
-          style: 
-            cytoscape.stylesheet()
-            .selector('node')
-              .css({
-                'content': 'data(name)',
-                'text-valign': 'center',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888'
-              })
-            .selector('edge')
-              .css({
-                'target-arrow-shape': 'triangle'
-              })
-            .selector(':selected')
-              .css({
-                'background-color': 'black',
-                'line-color': 'black',
-                'target-arrow-color': 'black',
-                'source-arrow-color': 'black'
-              })
-            .selector('.faded')
-              .css({
-                'opacity': 0.25,
-                'text-opacity': 0
-              }),
-          
-          elements: {
-            nodes: [
-              { data: { id: 'j', name: 'Jerry' } },
-              { data: { id: 'e', name: 'Elaine' } },
-              { data: { id: 'k', name: 'Kramer' } },
-              { data: { id: 'g', name: 'George' } }
-            ],
-            edges: [
-              { data: { source: 'j', target: 'e' } },
-              { data: { source: 'j', target: 'k' } },
-              { data: { source: 'j', target: 'g' } },
-              { data: { source: 'e', target: 'j' } },
-              { data: { source: 'e', target: 'k' } },
-              { data: { source: 'k', target: 'j' } },
-              { data: { source: 'k', target: 'e' } },
-              { data: { source: 'k', target: 'g' } },
-              { data: { source: 'g', target: 'j' } }
-            ]
-          },
-          
-          layout: {
-            name: 'cose',
-            padding: 10
-          },
-          
-          ready: function(){
-            console.log("cytoscape ready...");
-//            window.cy = this;
-          }
-
-        });     
-    }
+    ['events'],
+    function() {}
 );
 
-requirejs(
-    ['jquery', 'jsoneditor'],
-
-    function($, JSONEditor) {
-        console.log("Editor loaded.");
-
-        var editorDiv = $("#editor1_window")[0],
-            editor = new JSONEditor(editorDiv);
-
-        // Drag and drop support for the json editor.
-        editorDiv.addEventListener(
-          'dragover', 
-          function(evt){
-            evt.stopPropagation();
-            evt.preventDefault();
-            evt.dataTransfer.dropEffect = 'copy';
-          }, 
-          false
-        );
-
-        editorDiv.addEventListener(
-          'drop', 
-          function(evt){
-            evt.stopPropagation();
-            evt.preventDefault();
-
-            var f = evt.dataTransfer.files[0],            
-                reader = new FileReader();
-
-            console.log("Reading file: ", f);
-
-            reader.onload = function(e) {
-              console.log("Finished reading file: ", e);              
-
-              var t = e.currentTarget.result,
-                  j = JSON.parse(t);
-
-              editor.set(j);
-            };
-
-            reader.readAsText(f); 
-          }, 
-          false
-        );
-
-        editor.set({
-          'msg': 'Drag and drop a glow scene JSON file here.'
-        });      
-    }
-);
-
-
-requirejs(
-    ['jquery', 'jq_resize'],
-
-    function($, cytoscape) {
-      console.log('Resizer loaded.');
-
-      $('#noise_window').resize(function(e) { 
-        // console.log(e); 
-        if(window.cy)
-          window.cy.resize();
-          window.cy.fit();
-      });
-    }
-);
 
