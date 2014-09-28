@@ -6,14 +6,32 @@ Puredata: prior art, suggested by Prof. Shafae.
 Goals:
 
 1. Set up flask server to send user interface to web browser.
+    DONE!
 
 2. UI outstanding
     a. Fix network pane (non-interactive)
+        DONE!
+    
     b. Add Submit button
         To see if the docking library could handle multiple items, split the json editor panel into its own div, added a parent div, added some text, this didn't work - the layout code assumes one div I think and the editor bleeds into the pane below.
 
+    c. Add a way to get files in.
+        DONE!  Drag and drop a JSON populates the editor and the network panes.
+
+    d. Fix resize of network pane.
+        There's one bug I know of outstanding: undocking clears the window.
+        The Noise Tree inner window (cytoscape's) is being set to 0 dimensions.
+        All other resize and docking works (I spelunked into the docking code to catch the events for dock/undock and suspend/resume of layout).
+
+    e. Click on network node to edit JSON.
+
+    f. Add the other JSON editor (code).
+
 3. Connect user interface to server.
     a. Status
+
     b. Network
     c. JSON editor
+    Done - both of these come from local files.
+
     d. Render
