@@ -1,0 +1,23 @@
+/* 
+    Tim Finer 
+    tfiner@csu.fullerton.edu
+    CPSC-599
+*/
+
+body{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.render-window {
+    background-color: #666;
+}
+
+.log-window {
+    width: 100%;
+    height: 100%;
+}

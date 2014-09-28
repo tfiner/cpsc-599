@@ -24,6 +24,7 @@ Goals:
         All other resize and docking works (I spelunked into the docking code to catch the events for dock/undock and suspend/resume of layout).
 
     e. Click on network node to edit JSON.
+        DONE!
 
     f. Add the other JSON editor (code).
 

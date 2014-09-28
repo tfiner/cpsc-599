@@ -7,8 +7,8 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-requirejs( ['jquery', 'docker', 'editor', 'noiseTree'],
-  function($, docker, editor, tree) {
+requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
+  function($, docker, editor, tree, status, client) {
     console.log("Events loaded...", docker);    
 
     $(document).on('dragenter', function (e) {
@@ -32,14 +32,18 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree'],
 
         console.log("Reading file: ", f);
 
+        status.append("Reading file " + f.name + ".");
+
         reader.onload = function(e) {
           console.log("Finished reading file: ", e);              
+          status.append("Finished reading " + f.name + " (" + e.loaded + " bytes).");
 
           var t = e.currentTarget.result,
               j = JSON.parse(t);
 
           editor.editor.set(j);
           tree.parseJSON(j);
+          client.request('glow/setScene', j);
         };
 
         reader.readAsText(f); 
@@ -73,7 +77,7 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree'],
     });
 
     tree.cy.bind('select', function(evt){
-      console.log('select', evt);
+      // console.log('select', evt);
       if (!_.has(evt, 'cyTarget') ||
           !_.has(evt.cyTarget, '_private') ||
           !_.has(evt.cyTarget._private, 'ids') )
@@ -83,19 +87,18 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree'],
       if (ids.length <= 0 )
         return;
 
-      console.log("ids", ids);
-      console.log("editor", editor);
+      // console.log("ids", ids);
+      // console.log("editor", editor);
       var results = editor.editor.search(ids[0]),
           result = _.find(results, function(r){
             return r.node.getValue() == ids[0];
           });
 
-      editor.editor.search("");
-      editor.editor.collapseAll();
-
-      console.log("results", results);
-      console.log("result", result);
+      // console.log("results", results);
+      // console.log("result", result);
       if (result) {
+        editor.editor.search("");
+        editor.editor.collapseAll();
         result.node.scrollTo();
       }
 

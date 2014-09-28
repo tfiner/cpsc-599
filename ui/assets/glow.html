@@ -5,20 +5,30 @@
         <!-- Dock Spawn -->
         <link rel="stylesheet" href="css/font-awesome.css"> 
         <link rel="stylesheet" href="css/dock-manager.css">
-        <link rel="stylesheet" href="css/jsoneditor.css">
 
+        <link rel="stylesheet" href="css/jsoneditor.css">
+        <link rel="stylesheet" href="css/glow.css">
+
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
      </head>
 
     <body>
 
     <div id="my_dock_manager" class="my-dock-manager"></div>
 
-    <div id="status_window" caption="Status" class="status-window"></div>
+    <div id="status_window" caption="Status" class="status-window">
+        <textarea id="log_window" class="log-window"></textarea>
+    </div>
     <div id="editor1_window" title="Drag and drop a glow JSON file here" caption="Scene JSON" class="editor1-window"></div>    
     <div id="noise_window" caption="Noise Tree" class="noise-window"></div>
     <div id="render_window" caption="Render" class="render-window"></div>
 
 
     </body>
+
+
+<div id="dialog" title="Dialog">
+  <p>Dialog Text</p>
+</div>    
 
 </html>

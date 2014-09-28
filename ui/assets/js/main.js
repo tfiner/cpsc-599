@@ -13,12 +13,14 @@ require.config({
         dockspawn:  'dockspawn',
         jsoneditor: 'jsoneditor.min',
         cytoscape:  'cytoscape.min',
-        underscore: 'underscore',
+        underscore: 'underscore-min',
 
         docker:     'glowDock',
         editor:     'glowEditor',
         noiseTree:  'glowNoiseTree',
-        events:     'glowEvents'
+        events:     'glowEvents',
+        status:     'glowStatus',
+        client:     'glowClient'
     }
 });
 
@@ -34,4 +36,15 @@ requirejs(
     function() {}
 );
 
+requirejs(
+    ['status'],
+    function() {}
+);
+
+requirejs(
+    ['client'],
+    function(client) {
+        client.request('server/status')
+    }
+);
 

@@ -12,6 +12,10 @@ define(
     function($, _, ds) {
         console.log("Dockspawn loaded...");
 
+        // Turn off scroll bars.
+        $("body").css("overflow", "hidden");
+        // document.documentElement.style.overflow = 'hidden';
+
         // Turn on tooltips, ugh these are annoying 
         // (don't forget to include jquery_ui if using this again...)
         // $( document ).tooltip();
@@ -24,9 +28,10 @@ define(
 
         // Let the dock manager element fill in the entire screen
         var onResized = function(e) {
+            var elem = dockManager.element; 
             dockManager.resize(
-                window.innerWidth - (divDockManager.clientLeft + divDockManager.offsetLeft), 
-                window.innerHeight - (divDockManager.clientTop + divDockManager.offsetTop));
+                window.innerWidth - (2 * (elem.clientLeft + elem.offsetLeft)), 
+                window.innerHeight - (2 * (elem.clientTop + elem.offsetTop)));
         }
         window.onresize = onResized;
         onResized(null);
