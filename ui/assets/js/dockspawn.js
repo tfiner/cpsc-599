@@ -11,11 +11,11 @@ dockspawn.TabHandle = function(parent)
     var undockHandler = dockspawn.TabHandle.prototype._performUndock.bind(this);
     this.elementBase = document.createElement('div');
     this.elementText = document.createElement('div');
-    this.elementCloseButton = document.createElement('div');
+    // this.elementCloseButton = document.createElement('div');
     this.elementBase.classList.add("tab-handle");
     this.elementBase.classList.add("disable-selection"); // Disable text selection
     this.elementText.classList.add("tab-handle-text");
-    this.elementCloseButton.classList.add("tab-handle-close-button");
+    // this.elementCloseButton.classList.add("tab-handle-close-button");
     this.elementBase.appendChild(this.elementText);
     if (this.parent.host.displayCloseButton)
         this.elementBase.appendChild(this.elementCloseButton);
@@ -27,8 +27,8 @@ dockspawn.TabHandle = function(parent)
     this.elementText.innerHTML = title;
 
     // Set the close button text (font awesome)
-    var closeIcon = "icon-remove-sign";
-    this.elementCloseButton.innerHTML = '<i class="' + closeIcon + '"></i>';
+    // var closeIcon = "icon-remove-sign";
+    // this.elementCloseButton.innerHTML = '<i class="' + closeIcon + '"></i>';
 
     this._bringToFront(this.elementBase);
 
@@ -36,7 +36,7 @@ dockspawn.TabHandle = function(parent)
     this.undockInitiator.enabled = true;
 
     this.mouseClickHandler = new dockspawn.EventHandler(this.elementBase, 'click', this.onMouseClicked.bind(this));                     // Button click handler for the tab handle
-    this.closeButtonHandler = new dockspawn.EventHandler(this.elementCloseButton, 'mousedown', this.onCloseButtonClicked.bind(this));   // Button click handler for the close button
+    // this.closeButtonHandler = new dockspawn.EventHandler(this.elementCloseButton, 'mousedown', this.onCloseButtonClicked.bind(this));   // Button click handler for the close button
 
     this.zIndexCounter = 1000;
 };
@@ -54,11 +54,11 @@ dockspawn.TabHandle.prototype.updateTitle = function()
 dockspawn.TabHandle.prototype.destroy = function()
 {
     this.mouseClickHandler.cancel();
-    this.closeButtonHandler.cancel();
+    // this.closeButtonHandler.cancel();
     removeNode(this.elementBase);
-    removeNode(this.elementCloseButton);
+    // removeNode(this.elementCloseButton);
     delete this.elementBase;
-    delete this.elementCloseButton;
+    // delete this.elementCloseButton;
 };
 
 dockspawn.TabHandle.prototype._performUndock = function(e, dragOffset)
@@ -1892,7 +1892,7 @@ dockspawn.DocumentManagerContainer = function(dockManager)
     this.minimumAllowedChildNodes = 0;
     this.element.classList.add("document-manager");
     this.tabHost.createTabPage = this._createDocumentTabPage;
-    this.tabHost.displayCloseButton = true;
+    this.tabHost.displayCloseButton = false;
 };
 dockspawn.DocumentManagerContainer.prototype = new dockspawn.FillDockContainer();
 dockspawn.DocumentManagerContainer.prototype.constructor = dockspawn.DocumentManagerContainer;
@@ -2220,7 +2220,7 @@ dockspawn.PanelContainer = function(elementContent, dockManager, title)
     this.dockManager = dockManager;
     this.title = title;
     this.containerType = "panel";
-    this.iconName = "icon-circle-arrow-right";
+    // this.iconName = "icon-circle-arrow-right";
     this.minimumAllowedChildNodes = 0;
     this._floatingDialog = undefined;
     this._initialize();
@@ -2276,13 +2276,13 @@ dockspawn.PanelContainer.prototype._initialize = function()
     this.elementTitle = document.createElement('div');
     this.elementTitleText = document.createElement('div');
     this.elementContentHost = document.createElement('div');
-    this.elementButtonClose = document.createElement('div');
+    // this.elementButtonClose = document.createElement('div');
 
     this.elementPanel.appendChild(this.elementTitle);
     this.elementTitle.appendChild(this.elementTitleText);
-    this.elementTitle.appendChild(this.elementButtonClose);
-    this.elementButtonClose.innerHTML = '<i class="icon-remove"></i>';
-    this.elementButtonClose.classList.add("panel-titlebar-button-close");
+    // this.elementTitle.appendChild(this.elementButtonClose);
+    // this.elementButtonClose.innerHTML = '<i class="icon-remove"></i>';
+    // this.elementButtonClose.classList.add("panel-titlebar-button-close");
     this.elementPanel.appendChild(this.elementContentHost);
 
     this.elementPanel.classList.add("panel-base");
@@ -2300,7 +2300,7 @@ dockspawn.PanelContainer.prototype._initialize = function()
     // Add the panel to the body
     document.body.appendChild(this.elementPanel);
 
-    this.closeButtonClickedHandler = new dockspawn.EventHandler(this.elementButtonClose, 'click', this.onCloseButtonClicked.bind(this));
+    // this.closeButtonClickedHandler = new dockspawn.EventHandler(this.elementButtonClose, 'click', this.onCloseButtonClicked.bind(this));
 
     removeNode(this.elementContent);
     this.elementContentHost.appendChild(this.elementContent);
