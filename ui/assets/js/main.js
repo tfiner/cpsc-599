@@ -20,6 +20,7 @@ require.config({
         noiseTree:  'glowNoiseTree',
         events:     'glowEvents',
         status:     'glowStatus',
+        tools:      'glowTools',
         client:     'glowClient'
     }
 });
@@ -30,7 +31,6 @@ requirejs(
     function() {}
 );
 
-
 requirejs(
     ['events'],
     function() {}
@@ -38,6 +38,11 @@ requirejs(
 
 requirejs(
     ['status'],
+    function() {}
+);
+
+requirejs(
+    ['tools'],
     function() {}
 );
 

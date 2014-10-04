@@ -6,11 +6,11 @@
 // to the other modules.
 
 
-// Prevent drag and drop from opening a json as a new web page.
 requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
   function($, docker, editor, tree, status, client) {
     console.log("Events loaded...", docker);    
 
+    // Prevent drag and drop from opening a json as a new web page.
     $(document).on('dragenter', function (e) {
         e.stopPropagation();
         e.preventDefault();

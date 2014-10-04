@@ -36,19 +36,18 @@ define(
         window.onresize = onResized;
         onResized(null);
 
-        var status = new dockspawn.PanelContainer($("#status_window")[0], dockManager),
+        var status  = new dockspawn.PanelContainer($("#status_window")[0], dockManager),
+            editor1 = new dockspawn.PanelContainer($("#editor1_window")[0], dockManager),
+            noise   = new dockspawn.PanelContainer($("#noise_window")[0], dockManager),
+            render  = new dockspawn.PanelContainer($("#render_window")[0], dockManager),
+            tools   = new dockspawn.PanelContainer($("#tools_window")[0], dockManager),
 
-            editorDiv = $("#editor1_window")[0],
-            editor1 = new dockspawn.PanelContainer(editorDiv, dockManager),
-            noiseDiv = $("#noise_window"),
-            noise = new dockspawn.PanelContainer(noiseDiv[0], dockManager),
-            render = new dockspawn.PanelContainer($("#render_window")[0], dockManager),
-
-            documentNode = dockManager.context.model.documentManagerNode,
-            statusNode = dockManager.dockDown(documentNode, status, 0.1),
-            renderNode = dockManager.dockFill(documentNode, render),
-            noiseNode = dockManager.dockLeft(renderNode, noise, 0.25),
-            editor1Node = dockManager.dockUp(noiseNode, editor1, 0.5);
+            documentNode    = dockManager.context.model.documentManagerNode,
+            statusNode      = dockManager.dockDown(documentNode, status, 0.1),
+            renderNode      = dockManager.dockFill(documentNode, render),
+            noiseNode       = dockManager.dockLeft(renderNode, noise, 0.25),
+            editor1Node     = dockManager.dockUp(noiseNode, editor1, 0.5),
+            toolNode        = dockManager.dockUp(documentNode, tools, 0.1);
 
         return { 
             manager: dockManager,
