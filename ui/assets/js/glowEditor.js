@@ -8,7 +8,7 @@ define(
     ['jquery', 'jsoneditor'],
 
     function($, JSONEditor) {
-        console.log("Editor loaded...");
+        console.log("editor loading...");
 
         var div = $("#editor1_window")[0],
             editor = new JSONEditor(div);

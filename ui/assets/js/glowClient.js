@@ -9,8 +9,7 @@
 // Prevent drag and drop from opening a json as a new web page.
 define( ['jquery', 'status', 'jquery_ui'],
   function($, log) {
-    console.log("Client loaded...");   
-
+    console.log("client loading...");   
 
     return {
       request: function(url, msg, callback) {

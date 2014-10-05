@@ -13,11 +13,32 @@ body{
     user-select: none;
 }
 
-.render-window {
+#render_window {
     background-color: #666;
 }
 
-.log-window {
+.glow-window {
     width: 100%;
     height: 100%;
+}
+
+#log_window {
+    resize: none;
+}
+
+.gridster li header {
+    background: #999;
+    display: block;
+    font-size: 20px;
+    line-height: normal;
+    /*padding: 4px 0 6px ;*/
+    cursor: move;
+}
+
+canvas {
+    left: 0px;
+}
+
+#dialog {
+    visibility: hidden;
 }

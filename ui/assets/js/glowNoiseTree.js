@@ -10,7 +10,7 @@ define(
     ['jquery', 'cytoscape', 'underscore'],
 
     function($, cytoscape, _) {
-        console.log("Cytoscape loaded...");
+        console.log("cytoscape loading...");
 
         var tree = {
             cy: cytoscape({
@@ -112,17 +112,20 @@ define(
             },
 
             refresh: function() {
+                console.log("refresh tree.");
                 tree.cy.resize();
                 tree.cy.fit();
             }
         };
 
-        console.log(tree);
+        // console.log(tree);
 
         // $('#noise_window').resize(function(e) {
         //     // console.log(e);
         //     tree.refresh(); 
         // });
+
+        console.log("cytoscape loaded.");
 
         return tree;
     }

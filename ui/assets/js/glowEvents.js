@@ -7,9 +7,14 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
-  function($, docker, editor, tree, status, client) {
-    console.log("Events loaded...", docker);    
+define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
+  function($, editor, tree, status, client) {
+    console.log("events loading...");    
+    console.log("   $", $);    
+    console.log("   editor", editor);    
+    console.log("   noiseTree", tree);    
+    console.log("   status", status);    
+    console.log("   client", client);    
 
     $(document).on('dragenter', function (e) {
         e.stopPropagation();
@@ -22,6 +27,7 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
       // e.target.css('border', '2px dotted #0B85A1');
     });
 
+    // Load a dropped JSON as a new scene file.
     $(document).on('drop', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -49,33 +55,8 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
         reader.readAsText(f); 
     });
 
-    docker.manager.addLayoutListener({
-      onDock: function(mgr, dockNode){
-        console.log("docking ", dockNode);
-        if (docker.noiseNode.name == dockNode.name) {
-          tree.refresh();
-        }
-      },
-
-      onUndock: function(mgr, dockNode){
-        console.log("undocking ", dockNode);
-        if (docker.noiseNode.name == dockNode.name) {
-          tree.refresh();
-        }
-      },
-
-      onSuspendLayout: function(mgr){
-        // console.log("onSuspendLayout ");
-        // tree.refresh();
-      },
-
-      onResumeLayout: function(mgr){
-        // console.log("onResumeLayout ");
-        tree.refresh();
-      }
-
-    });
-
+    // Use cytoscapes select event to select the corresponding
+    // node in the json editor.
     tree.cy.bind('select', function(evt){
       // console.log('select', evt);
       if (!_.has(evt, 'cyTarget') ||
@@ -102,7 +83,43 @@ requirejs( ['jquery', 'docker', 'editor', 'noiseTree', 'status', 'client'],
         result.node.scrollTo();
       }
 
-    });    
+    });
+
+    var resizeGlow = function(widget) {
+      console.log("resizing: ", widget);
+      var newHeight = widget.height() - widget.children("header").height() * 2,
+          noise = widget.children("#noise_window");
+
+      widget.children(".glow-window").height(newHeight);
+      widget.children(".glow-window").width(widget.width());
+
+      if (noise.length) {
+        tree.refresh();
+      }
+    };
+
+    return {
+
+      resizeStopped: function(widget) {
+        console.log("resizeStopped:\n", widget);
+
+        if (!_.has(widget, "length")) {
+          return;
+        }
+
+        resizeGlow(widget);
+      },
+
+      resizing: function(widget) {
+        console.log("resizing:\n", widget);
+
+        if (!_.has(widget, "length")){
+          return;
+        }
+
+        resizeGlow(widget);
+      }
+    }    
 
   }
 );

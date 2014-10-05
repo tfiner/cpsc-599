@@ -10,15 +10,15 @@ require.config({
         // the '.js' file extension.
         jquery:     'jquery-1.11.1.min',
         jquery_ui:  'jquery-ui.min',
-        dockspawn:  'dockspawn',
+        gridster:   'jquery.gridster.min',
         jsoneditor: 'jsoneditor.min',
         cytoscape:  'cytoscape.min',
         underscore: 'underscore-min',
 
-        docker:     'glowDock',
+        events:     'glowEvents',
+        glowMain:   'glowMain',
         editor:     'glowEditor',
         noiseTree:  'glowNoiseTree',
-        events:     'glowEvents',
         status:     'glowStatus',
         client:     'glowClient'
     }
@@ -26,25 +26,9 @@ require.config({
 
 
 requirejs(
-    ['docker'],
-    function() {}
-);
-
-
-requirejs(
-    ['events'],
-    function() {}
-);
-
-requirejs(
-    ['status'],
-    function() {}
-);
-
-requirejs(
-    ['client'],
-    function(client) {
-        client.request('server/status')
+    ['glowMain'],
+    function(m) {
+        console.log("glowMain requested.");
+        console.log("   m: ", m);
     }
 );
-

@@ -7,16 +7,12 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define( ['jquery'],
+define( ['jquery', 'jquery_ui'],
 function($) {
-    console.log("status loading...");
+    console.log("Tools loaded...");
 
-    var div = $("#log_window");
+    $( "button:first" ).button({
+    });
 
-    return {
-        append: function(msg) {
-            div.append(msg + "\n");
-        }
-    }
 });
 
