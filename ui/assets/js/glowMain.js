@@ -24,8 +24,9 @@ define(
         // (don't forget to include jquery_ui if using this again...)
         // $( document ).tooltip();
 
-
-        var grid = $(".gridster ul").gridster({
+        var i,
+            panes = $(".gridster li"), 
+            grid = $(".gridster ul").gridster({
             widget_margins: [10, 10],
             widget_base_dimensions: [140, 140],
             helper: 'clone',
@@ -52,6 +53,11 @@ define(
                 }
             }
         });
+
+        // Start everything off in sync with gridster parent divs.
+        console.log("Forcing a resize...");
+        for(i = 0; i < panes.length; ++i)
+            events.resizing($(panes[i]));
 
         return {
             grid: grid

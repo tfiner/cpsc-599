@@ -39,11 +39,13 @@ define( ['jquery', 'status', 'jquery_ui'],
               console.log("status:", status);
               console.log("thrown:", thrown);
 
-              var response = jqXhr.statusText;
+              var response  = jqXhr.statusText,
+                  dlg       = $( "#dialog" );
+
               console.log("response:", response);
 
-              $( "#dialog" ).text(response);
-              $( "#dialog" ).dialog({
+              dlg.text(response);
+              dlg.dialog({
                 title: "Error from server!",
                 modal: true,
                 buttons: {

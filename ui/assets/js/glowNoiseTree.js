@@ -112,7 +112,7 @@ define(
             },
 
             refresh: function() {
-                console.log("refresh tree.");
+                // console.log("refresh tree.");
                 tree.cy.resize();
                 tree.cy.fit();
             }

@@ -90,9 +90,11 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
       var newHeight = widget.height() - widget.children("header").height() * 2,
           noise = widget.children("#noise_window");
 
+      // Set all of the glow window childen to match the parent.
       widget.children(".glow-window").height(newHeight);
       widget.children(".glow-window").width(widget.width());
 
+      // If this is the noise window, tell it to refresh its canvas.
       if (noise.length) {
         tree.refresh();
       }
@@ -101,7 +103,7 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
     return {
 
       resizeStopped: function(widget) {
-        console.log("resizeStopped:\n", widget);
+        // console.log("resizeStopped:\n", widget);
 
         if (!_.has(widget, "length")) {
           return;
@@ -111,7 +113,7 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
       },
 
       resizing: function(widget) {
-        console.log("resizing:\n", widget);
+        // console.log("resizing:\n", widget);
 
         if (!_.has(widget, "length")){
           return;
