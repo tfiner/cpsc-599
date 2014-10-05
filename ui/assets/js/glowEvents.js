@@ -7,8 +7,8 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
-  function($, editor, tree, status, client) {
+define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
+  function($, editor, tree, status, client, file) {
     console.log("events loading...");    
     console.log("   $", $);    
     console.log("   editor", editor);    
@@ -33,26 +33,9 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
         e.preventDefault();
 
         var evt = e.originalEvent,
-            f = evt.dataTransfer.files[0],            
-            reader = new FileReader();
+            f = evt.dataTransfer.files[0];
 
-        console.log("Reading file: ", f);
-
-        status.append("Reading file " + f.name + ".");
-
-        reader.onload = function(e) {
-          console.log("Finished reading file: ", e);              
-          status.append("Finished reading " + f.name + " (" + e.loaded + " bytes).");
-
-          var t = e.currentTarget.result,
-              j = JSON.parse(t);
-
-          editor.editor.set(j);
-          tree.parseJSON(j);
-          client.request('glow/setScene', j);
-        };
-
-        reader.readAsText(f); 
+        file.read(f);
     });
 
     // Use cytoscapes select event to select the corresponding
@@ -86,7 +69,7 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
     });
 
     var resizeGlow = function(widget) {
-      console.log("resizing: ", widget);
+      // console.log("resizing: ", widget);
       var newHeight = widget.height() - widget.children("header").height() * 2,
           noise = widget.children("#noise_window");
 
@@ -103,6 +86,7 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
     return {
 
       resizeStopped: function(widget) {
+        var gridSerialized;
         // console.log("resizeStopped:\n", widget);
 
         if (!_.has(widget, "length")) {

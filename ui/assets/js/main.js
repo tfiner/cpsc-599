@@ -17,18 +17,19 @@ require.config({
 
         events:     'glowEvents',
         glowMain:   'glowMain',
+        file:       'glowFile',
         editor:     'glowEditor',
         noiseTree:  'glowNoiseTree',
         status:     'glowStatus',
-        client:     'glowClient'
+        client:     'glowClient',
+        tools:      'glowTools'
     }
 });
 
 
 requirejs(
     ['glowMain'],
-    function(m) {
+    function() {
         console.log("glowMain requested.");
-        console.log("   m: ", m);
     }
 );

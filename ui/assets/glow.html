@@ -2,16 +2,15 @@
     <head>
         <script data-main="js/main.js" src="js/require.js"></script>
 
-        <!-- Dock Spawn -->
-        <link rel="stylesheet" href="css/font-awesome.css"> 
-
         <link rel="stylesheet" href="css/jquery.gridster.min.css"> 
         <link rel="stylesheet" href="css/jquery.gridster.demo.css"> 
 
         <link rel="stylesheet" href="css/jsoneditor.css">
-        <link rel="stylesheet" href="css/glow.css">
-
         <link rel="stylesheet" href="css/jquery-ui.min.css">
+
+        <!-- <link rel="stylesheet" href="css/font-awesome.css">  -->
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"> 
+        <link rel="stylesheet" href="css/glow.css">        
      </head>
 
     <body>
@@ -39,6 +38,17 @@
                 <header>[Render]</header>
                 <div id="render_window" class="glow-window"></div>
             </li>
+
+            <li data-row="2" data-col="1" data-sizex="3" data-sizey="1">
+                <header>[Tools]</header>
+                <div id="tool_window" class="glow-window">
+                    <div id="toolbar" class="ui-widget-header ui-corner-all">
+                      <button id="open">Open</button>                        
+                      <button id="save">Save</button>                        
+                      <button id="render">Render</button>                        
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
 
@@ -50,5 +60,9 @@
 <div id="dialog" title="Dialog" style="display: none">
   <p>Dialog Text</p>
 </div>    
+
+<!-- <input id="fileInput" type="file" name="files[]" style="display: none"/> -->
+<input id="fileInput" type="file" name="files[]"/>
+
 
 </html>

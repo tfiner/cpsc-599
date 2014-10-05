@@ -7,7 +7,7 @@
 
 
 define(
-    ['jquery', 'gridster', 'status', 'events'],
+    ['jquery', 'gridster', 'status', 'events', 'tools'],
 
     function($, gridster, status, events) {
         console.log("glowMain loading...");
@@ -25,42 +25,63 @@ define(
         // $( document ).tooltip();
 
         var i,
+            gridSerialized,
+            gridJson,
             panes = $(".gridster li"), 
             grid = $(".gridster ul").gridster({
-            widget_margins: [10, 10],
-            widget_base_dimensions: [140, 140],
-            helper: 'clone',
-            resize: {
-                enabled: true
-            },
-            draggable: {
-                handle: 'header'
-            },
-            resize: {
-                enabled: true,
-                start: function(e, ui, widget) {
-                    // console.log("START:\n", e, ui, widget);
+                widget_margins: [10, 10],
+                widget_base_dimensions: [140, 140],
+                helper: 'clone',
+                draggable: {
+                    handle: 'header'
                 },
+                resize: {
+                    enabled: true,
 
-                resize: function(e, ui, widget) {
-                    // console.log("RESIZE:\n", e, ui, widget);
-                    events.resizing(widget);
-                },
+                    start: function(e, ui, widget) {
+                        // console.log("START:\n", e, ui, widget);
+                    },
 
-                stop: function(e, ui, widget) {
-                    // console.log("STOP:\n", e, ui, widget);
-                    events.resizeStopped(widget);
+                    resize: function(e, ui, widget) {
+                        // console.log("RESIZE:\n", e, ui, widget);
+                        events.resizing(widget);
+                    },
+
+                    stop: function(e, ui, widget) {
+                        // console.log("STOP:\n", e, ui, widget);
+                        events.resizeStopped(widget);
+
+                        // Not working!
+                        // Save the current workspace.
+                        // gridSerialized = gridster.serialize();
+                        // localStorage.setItem('glowGrid', JSON.stringify(gridSerialized));                        
+                    }
                 }
-            }
-        });
+            });
+
+        // Serialization not working!
+        // console.log("gridster:", gridster);
+        // console.log("grid:", grid);
+        // console.log("grid:", grid.serialize());
+
+        // gridSerialized = localStorage.getItem('glowGrid');
+        // if (gridSerialized && gridSerialized.length) {
+        //     gridJson = JSON.parse(gridSerialized);
+        //     if (gridJson && gridJson.length) {
+        //         console.log("Serialized grid: ", gridJson);
+        //     }
+            // gridJson = gridster.sort_by_row_and_col_asc(gridJson);
+
+            // grid.remove_all_widgets();
+            // $.each(serialization, function() {
+            //     grid.add_widget('<li />', this.size_x, this.size_y, this.col, this.row);
+            // });            
+        // }
 
         // Start everything off in sync with gridster parent divs.
         console.log("Forcing a resize...");
         for(i = 0; i < panes.length; ++i)
             events.resizing($(panes[i]));
 
-        return {
-            grid: grid
-        }
     }
 );
