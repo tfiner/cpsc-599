@@ -29,6 +29,7 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
 
     // Load a dropped JSON as a new scene file.
     $(document).on('drop', function (e) {
+        // Prevent the browser from thinking it needs to show the dropped file as source.
         e.stopPropagation();
         e.preventDefault();
 
