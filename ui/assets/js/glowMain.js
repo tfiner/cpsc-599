@@ -30,7 +30,10 @@ define(
             panes = $(".gridster li"), 
             grid = $(".gridster ul").gridster({
                 widget_margins: [10, 10],
-                widget_base_dimensions: [140, 140],
+                widget_base_dimensions: [64, 64],
+                // autogrow_cols: true,
+                extra_cols: 10,
+                extra_rows: 10,
                 helper: 'clone',
                 draggable: {
                     handle: 'header'

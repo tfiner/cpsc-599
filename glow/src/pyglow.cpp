@@ -21,12 +21,15 @@ namespace {
 
 
     std::vector<std::string> ListToVector(boost::python::list& bpl) {
-        std::vector<std::string> vt;
         boost::python::ssize_t len = boost::python::len(bpl);
+
+        std::vector<std::string> vt;
+        vt.reserve(len);
         for(int i=0; i<len;i++){
             auto t = boost::python::extract<std::string>(bpl[i])();
             vt.push_back(t);
         }
+
         return vt;
     }
 

@@ -7,8 +7,8 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define(['jquery', 'file', 'jquery_ui'],
-    function($, file) {
+define(['jquery', 'file', 'client', 'jquery_ui'],
+    function($, file, client) {
         console.log("tools loading...");
 
         var saveJson = function() {
@@ -51,12 +51,12 @@ define(['jquery', 'file', 'jquery_ui'],
             e.preventDefault();
 
             var onOk = function() {
-              var fsa   = $('#fileSaveAs'),
-                  fname = $("#dialogSaveAs").find('input[name="fileName"]').val();
+                var fsa = $('#fileSaveAs'),
+                    fname = $("#dialogSaveAs").find('input[name="fileName"]').val();
 
-              console.log("fname", fname);
-              fsa.attr("download", fname);
-              fsa.get(0).click();
+                console.log("fname", fname);
+                fsa.attr("download", fname);
+                fsa.get(0).click();
             };
 
             var dlg = $("#dialogSaveAs").dialog({
@@ -66,15 +66,15 @@ define(['jquery', 'file', 'jquery_ui'],
                 modal: true,
                 buttons: {
                     Ok: function() {
-                      $(this).dialog("close");
-                      onOk();
+                        $(this).dialog("close");
+                        onOk();
                     }
                 }
             }).keyup(function(e) {
-              if (e.keyCode == 13) {
-                $(this).dialog("close");
-                onOk();
-              }
+                if (e.keyCode == 13) {
+                    $(this).dialog("close");
+                    onOk();
+                }
             });
 
         });
@@ -83,5 +83,25 @@ define(['jquery', 'file', 'jquery_ui'],
             icons: {
                 primary: "icon-camera"
             }
+        }).click(function(e) {
+            $("#renderImage").hide();
+            $("#renderBusy").show();
+
+            client.request({
+              'url':"glow/render",
+              'callback': function(data, status, jqXhr){
+                console.log(data);
+                console.log(status);
+                console.log(jqXhr);
+                if (jqXhr.status == 200 && _.has(data, 'image')) {
+                  // Set the returned image.
+                  $("#renderImage").attr("src", "data:image/png;base64," + data.image)
+
+                  $("#renderImage").show();
+                  $("#renderBusy").hide();
+
+                }
+              }               
+            });
         });
     });

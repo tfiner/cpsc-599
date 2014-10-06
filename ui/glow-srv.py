@@ -2,12 +2,26 @@
 
 from flask import Flask
 from flask import request
+from flask import send_file
+
+from PIL import Image
+from StringIO import StringIO
 
 import os
 import json
 import urllib
+import base64
 
 app = Flask(__name__, static_folder='assets')
+
+
+def imgToString(pil_img):
+    img_io = StringIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return img_io.getvalue()
+    # return send_file(img_io, mimetype='image/jpeg')
+
 
 @app.route('/')
 def root():
@@ -23,6 +37,21 @@ def set_scene():
     # print "request query:", query
     print "request query (json):", json.dumps(query)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+
+@app.route('/glow/render')
+def render():
+    query=urllib.unquote(request.query_string).decode('utf8') 
+    # print "request query:", query
+    print "request query (json):", json.dumps(query)
+
+    img = Image.new("RGB", (512, 512), "red")
+    imgStr = imgToString(img)
+    b64Img = base64.b64encode(imgStr)
+    # return serve_pil_image(img)
+    return json.dumps(
+        {'image':b64Img}), 200, {'ContentType':'application/json'}
+
 
 # TODO:1 these two handlers might not be necessary.
 @app.route('/js/<path:path>')
@@ -40,6 +69,7 @@ def static_font_proxy(path):
 @app.route('/images/<path:path>')
 def static_images_proxy(path):
     return app.send_static_file(os.path.join('images', path))
+
 
 if __name__ == "__main__":
     app.debug = True

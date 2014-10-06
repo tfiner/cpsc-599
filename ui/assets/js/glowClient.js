@@ -7,23 +7,23 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define( ['jquery', 'status', 'jquery_ui'],
-  function($, log) {
+define( ['jquery', 'status', 'underscore', 'jquery_ui'],
+  function($, log, _) {
     console.log("client loading...");   
 
     return {
-      request: function(url, msg, callback) {
-        var msg_ = msg || '{}',
+      request: function(opts) {
+        var msg_ = _.has(opts,'msg') ? opts.msg : '{}',
             text = JSON.stringify(msg_),
-            cb_ = callback || function(){};
+            cb_ = _.has(opts,'callback') ? opts.callback : function(){};
 
-        log.append("> " + url + " : " + text);
+        log.append("> " + opts.url + " : " + text);
 
         $.ajax({
           contentType: 'application/json; charset=utf-8',
           data: text,          
           dataType: 'json',
-          url: url,
+          url: opts.url,
           success: function(data, status, jqXhr) {     
               console.log("data:", data);
               console.log("status:", status);
