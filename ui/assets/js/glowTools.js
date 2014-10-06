@@ -2,13 +2,12 @@
 // tfiner@csu.fullerton.edu
 // CPSC-599
 //
-// This file is the module that handles JS events and routes them 
-// to the other modules.
+// This file is the module that is responsible for the tools window. 
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define(['jquery', 'file', 'client', 'jquery_ui'],
-    function($, file, client) {
+define(['jquery', 'file', 'client', 'render', 'jquery_ui'],
+    function($, file, client, render) {
         console.log("tools loading...");
 
         var saveJson = function() {
@@ -93,13 +92,8 @@ define(['jquery', 'file', 'client', 'jquery_ui'],
                 console.log(data);
                 console.log(status);
                 console.log(jqXhr);
-                if (jqXhr.status == 200 && _.has(data, 'image')) {
-                  // Set the returned image.
-                  $("#renderImage").attr("src", "data:image/png;base64," + data.image)
-
-                  $("#renderImage").show();
-                  $("#renderBusy").hide();
-
+                if (jqXhr.status == 200) {
+                  render.setImage(data);
                 }
               }               
             });

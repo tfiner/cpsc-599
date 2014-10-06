@@ -10,11 +10,11 @@
 define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
   function($, editor, tree, status, client, file) {
     console.log("events loading...");    
-    console.log("   $", $);    
-    console.log("   editor", editor);    
-    console.log("   noiseTree", tree);    
-    console.log("   status", status);    
-    console.log("   client", client);    
+    // console.log("   $", $);    
+    // console.log("   editor", editor);    
+    // console.log("   noiseTree", tree);    
+    // console.log("   status", status);    
+    // console.log("   client", client);    
 
     $(document).on('dragenter', function (e) {
         e.stopPropagation();

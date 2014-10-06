@@ -17,11 +17,9 @@ app = Flask(__name__, static_folder='assets')
 
 def imgToString(pil_img):
     img_io = StringIO()
-    pil_img.save(img_io, 'JPEG', quality=70)
+    pil_img.save(img_io, 'PNG')
     img_io.seek(0)
     return img_io.getvalue()
-    # return send_file(img_io, mimetype='image/jpeg')
-
 
 @app.route('/')
 def root():

@@ -14,7 +14,7 @@ body{
 }
 
 #render_window {
-    background-color: #666;
+    /*background-color: #666;*/
 }
 
 .glow-window {
@@ -64,4 +64,13 @@ canvas {
 /* Allow use of icon-large to be properly aligned */
 .ui-icon.icon-large {
     margin-top: -0.75em;
+}
+
+/* Wow - this works really well.  The image is always centered in the render window. */
+#renderImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }

@@ -7,14 +7,14 @@
 
 
 define(
-    ['jquery', 'gridster', 'status', 'events', 'tools'],
+    ['jquery', 'gridster', 'status', 'events', 'render', 'tools'],
 
-    function($, gridster, status, events) {
+    function($, gridster, status, events, render) {
         console.log("glowMain loading...");
-        console.log("   jquery", $);
-        console.log("   gridster", gridster);
-        console.log("   status", status);
-        console.log("   events", events);
+        // console.log("   jquery", $);
+        // console.log("   gridster", gridster);
+        // console.log("   status", status);
+        // console.log("   events", events);
 
         // Turn off scroll bars.
         // $("body").css("overflow", "hidden");
@@ -64,7 +64,7 @@ define(
 
         // Serialization not working!
         // console.log("gridster:", gridster);
-        // console.log("grid:", grid);
+        console.log("grid:", grid);
         // console.log("grid:", grid.serialize());
 
         // gridSerialized = localStorage.getItem('glowGrid');
@@ -85,6 +85,12 @@ define(
         console.log("Forcing a resize...");
         for(i = 0; i < panes.length; ++i)
             events.resizing($(panes[i]));
+
+        render.resizeCell();
+
+        return { 
+            gridster: grid 
+        };
 
     }
 );

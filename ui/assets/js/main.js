@@ -22,7 +22,8 @@ require.config({
         noiseTree:  'glowNoiseTree',
         status:     'glowStatus',
         client:     'glowClient',
-        tools:      'glowTools'
+        tools:      'glowTools',
+        render:     'glowRender'
     }
 });
 
