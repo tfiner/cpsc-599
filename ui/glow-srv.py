@@ -4,22 +4,23 @@ from flask import Flask
 from flask import request
 from flask import send_file
 
-from PIL import Image
 from StringIO import StringIO
 
 import os
 import json
 import urllib
 import base64
+import tempfile
+
+import glow
+
 
 app = Flask(__name__, static_folder='assets')
 
 
-def imgToString(pil_img):
-    img_io = StringIO()
-    pil_img.save(img_io, 'PNG')
-    img_io.seek(0)
-    return img_io.getvalue()
+cmdLine = "glow --input={0} --output={1} --verbose"
+curSceneFile = ""
+
 
 @app.route('/')
 def root():
@@ -31,9 +32,27 @@ def server_status():
 
 @app.route('/glow/setScene')
 def set_scene():
-    query=urllib.unquote(request.query_string).decode('utf8') 
-    # print "request query:", query
-    print "request query (json):", json.dumps(query)
+    global curSceneFile
+
+    print "-" * 80
+    print "request query:", request.query_string
+    query = urllib.unquote(request.query_string).decode('utf8') 
+
+    print "-" * 80
+    print "request query (unquoted):", query
+
+    print "-" * 80
+    print "request query (json):", json.dumps(query, indent=4)
+
+    print "-" * 80
+
+    handle, name = tempfile.mkstemp(suffix='.json', prefix='glow-')
+    print "curScene:", name
+    outFile = os.fdopen(handle, "w")
+    outFile.write(query)
+    # json.dump(query, outFile, indent=4)
+    curSceneFile = name
+
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
@@ -43,12 +62,20 @@ def render():
     # print "request query:", query
     print "request query (json):", json.dumps(query)
 
-    img = Image.new("RGB", (512, 512), "red")
-    imgStr = imgToString(img)
-    b64Img = base64.b64encode(imgStr)
-    # return serve_pil_image(img)
-    return json.dumps(
-        {'image':b64Img}), 200, {'ContentType':'application/json'}
+    (handle, outputName) = tempfile.mkstemp(suffix='.png', prefix='glow-')
+
+    cmdLineArgs = "glow --input={0} --output={1} --verbose".format(curSceneFile, outputName)
+    print "Calling glow:", cmdLineArgs
+
+    ret = glow.run(cmdLineArgs.split())
+    retVal = json.dumps({'glow':ret}), 500, {'ContentType':'application/json'}
+    if ret == 0:
+        b64Img = StringIO()
+        with open(outputName) as img:
+            base64.encode(img, b64Img)
+            retVal = json.dumps({'image':b64Img.getvalue()}), 200, {'ContentType':'application/json'}
+
+    return retVal
 
 
 # TODO:1 these two handlers might not be necessary.
