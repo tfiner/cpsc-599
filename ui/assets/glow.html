@@ -17,34 +17,27 @@
 
 
     <div class="gridster">
-        <ul>        
-            <li data-row="4" data-col="1" data-sizex="3" data-sizey="1" 
-                id="status_window" class="status-window">
-                <header>[Log]</header>
-                <textarea id="log_window" class="glow-window"></textarea>
-            </li>
+        <ul> 
+            <!-- [
+                {"id":"editor1_window","col":"11","row":"1","size_x":"8","size_y":"7"},
+                {"id":"noise_window","col":"11","row":"8","size_x":"8","size_y":"6"},
+                {"id":"tool_window","col":"1","row":"1","size_x":"10","size_y":"1"},
+                {"id":"render_window","col":"1","row":"2","size_x":"10","size_y":"7"},
+                {"id":"log_window","col":"1","row":"9","size_x":"10","size_y":"5"}
+            ] -->
 
-            <li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+            <li data-row="1" data-col="11" data-sizex="8" data-sizey="7">
                 <header>[Scene Editor]</header>
                 <div id="editor1_window" class="glow-window"></div>
             </li>  
 
-            <li data-row="1" data-col="2" data-sizex="2" data-sizey="2">
+            <li data-row="8" data-col="11" data-sizex="8" data-sizey="6">
                 <header>[Noise Tree Editor]</header>
                 <div id="noise_window" class="glow-window"></div>
             </li>
 
-            <li data-row="3" data-col="1" data-sizex="4" data-sizey="4">
-                <header>[Render]</header>
-                <div id="render_window" class="glow-window">
-                    <img id="renderImage" src="images/glow.png" />
-                    <div id="renderBusy" style="display:none;">
-                        <i class="icon-refresh icon-spin" style="font-size:256px"></i>
-                    </div>                    
-                </div>
-            </li>
 
-            <li data-row="2" data-col="1" data-sizex="3" data-sizey="1">
+            <li data-row="1" data-col="1" data-sizex="10" data-sizey="1">
                 <header>[Tools]</header>
                 <div id="tool_window" class="glow-window">
                     <div id="toolbar" class="ui-widget-header ui-corner-all">
@@ -54,6 +47,23 @@
                     </div>
                 </div>
             </li>
+
+            <li data-row="2" data-col="1" data-sizex="10" data-sizey="7">
+                <header>[Render]</header>
+                <div id="render_window" class="glow-window">
+                    <img id="renderImage" src="images/glow.png" />
+                    <div id="renderBusy" style="display:none;">
+                        <i class="icon-refresh icon-spin" style="font-size:256px"></i>
+                    </div>                    
+                </div>
+            </li>
+
+            <li data-row="9" data-col="1" data-sizex="10" data-sizey="5" 
+                id="status_window" class="status-window">
+                <header>[Log]</header>
+                <textarea id="log_window" class="glow-window"></textarea>
+            </li>
+
         </ul>
     </div>
 

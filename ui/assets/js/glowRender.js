@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'jquery_ui'],
 
         return {
 
+            // Resizes the parent cell of the render image to fit the image.
             resizeCell: function() {
                 var gridster = $(".gridster ul").gridster().data('gridster'),
                     cell = $("#render_window").parent(),
@@ -29,9 +30,9 @@ define(['jquery', 'underscore', 'jquery_ui'],
             },
 
             setImage: function(options) {
+                var img = $("#renderImage");
                 if (_.has(options, 'image')) {
-                    // Set the returned image.
-                    $("#renderImage").attr("src", "data:image/png;base64," + options.image);
+                    img.attr("src", "data:image/png;base64," + options.image);
 
                     this.resizeCell();
 

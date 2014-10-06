@@ -66,7 +66,9 @@ canvas {
     margin-top: -0.75em;
 }
 
-/* Wow - this works really well.  The image is always centered in the render window. */
+/*  Wow - this works really well.  The image is always centered in the render window. 
+    http://www.w3.org/Style/Examples/007/center.en.html#vertical
+*/
 #renderImage {
     position: absolute;
     top: 50%;
