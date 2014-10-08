@@ -30,7 +30,7 @@ def root():
 def server_status():
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
-@app.route('/glow/setScene')
+# @app.route('/glow/setScene')
 def set_scene():
     global curSceneFile
 
@@ -53,14 +53,16 @@ def set_scene():
     # json.dump(query, outFile, indent=4)
     curSceneFile = name
 
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    # return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 @app.route('/glow/render')
 def render():
-    query=urllib.unquote(request.query_string).decode('utf8') 
-    # print "request query:", query
-    print "request query (json):", json.dumps(query)
+    set_scene()
+
+    # query=urllib.unquote(request.query_string).decode('utf8') 
+    # # print "request query:", query
+    # print "request query (json):", json.dumps(query)
 
     (handle, outputName) = tempfile.mkstemp(suffix='.png', prefix='glow-')
 

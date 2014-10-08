@@ -14,6 +14,7 @@ Goals:
     
     b. Add Submit button
         To see if the docking library could handle multiple items, split the json editor panel into its own div, added a parent div, added some text, this didn't work - the layout code assumes one div I think and the editor bleeds into the pane below.
+        DONE!
 
     c. Add a way to get files in.
         DONE!  Drag and drop a JSON populates the editor and the network panes.
@@ -22,6 +23,7 @@ Goals:
         There's one bug I know of outstanding: undocking clears the window.
         The Noise Tree inner window (cytoscape's) is being set to 0 dimensions.
         All other resize and docking works (I spelunked into the docking code to catch the events for dock/undock and suspend/resume of layout).
+        DONE!
 
     e. Click on network node to edit JSON.
         DONE!
@@ -36,3 +38,4 @@ Goals:
     Done - both of these come from local files.
 
     d. Render
+    DONE!

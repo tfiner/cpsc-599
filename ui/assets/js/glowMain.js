@@ -78,11 +78,23 @@ define(
                         localStorage.setItem('glowGrid', js);                        
                     }
                 }
-            }).data("gridster");
+            }).data("gridster"),
+            lastUserInputWasBackspace = false
 
-
-        // gridster.add_widget('<li>Hey there.</li>', 1, 1, 1, 5);
-
+        // This hackery prevents the retarded behavior of backspace 
+        // meaning navigate back a page.
+        // http://stackoverflow.com/a/22949859/196682
+        $(document).keydown(function(event){
+            lastUserInputWasBackspace = event.which == 8;
+        })
+        $(document).mousedown(function(){
+            lastUserInputWasBackspace = false;
+        })
+        $(window).on('beforeunload', function(){
+            if (lastUserInputWasBackspace) {
+                return "Are you sure you want to leave this page?";
+            }
+        })
 
         // Serialization not working!
 

@@ -27,10 +27,6 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
 
                     editor.editor.set(j);
                     tree.parseJSON(j);
-                    client.request({
-                        'url':'glow/setScene', 
-                        'msg': j
-                    });
                 };
 
                 reader.readAsText(f);

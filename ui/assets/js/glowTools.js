@@ -6,8 +6,8 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define(['jquery', 'file', 'client', 'render', 'jquery_ui'],
-    function($, file, client, render) {
+define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
+    function($, file, client, render, editor) {
         console.log("tools loading...");
 
         var saveJson = function() {
@@ -87,15 +87,17 @@ define(['jquery', 'file', 'client', 'render', 'jquery_ui'],
             $("#renderBusy").show();
 
             client.request({
-              'url':"glow/render",
-              'callback': function(data, status, jqXhr){
-                console.log(data);
-                console.log(status);
-                console.log(jqXhr);
-                if (jqXhr.status == 200) {
-                  render.setImage(data);
+                'url': "glow/render",
+                'msg': editor.editor.get(),
+
+                'callback': function(data, status, jqXhr) {
+                    console.log(data);
+                    console.log(status);
+                    console.log(jqXhr);
+                    if (jqXhr.status == 200) {
+                        render.setImage(data);
+                    }
                 }
-              }               
             });
         });
     });
