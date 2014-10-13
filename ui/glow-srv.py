@@ -3,8 +3,11 @@
 from flask import Flask
 from flask import request
 from flask import send_file
+from flask import abort
+from flask.helpers import send_from_directory
 
 from StringIO import StringIO
+from PIL import Image
 
 import os
 import json
@@ -20,7 +23,7 @@ app = Flask(__name__, static_folder='assets')
 
 cmdLine = "glow --input={0} --output={1} --verbose"
 curSceneFile = ""
-
+curNoisePreviewDir = ""
 
 @app.route('/')
 def root():
@@ -78,6 +81,67 @@ def render():
             retVal = json.dumps({'image':b64Img.getvalue()}), 200, {'ContentType':'application/json'}
 
     return retVal
+
+@app.route('/glow/preview')
+def preview():
+    global curNoisePreviewDir
+    set_scene()
+
+    # query=urllib.unquote(request.query_string).decode('utf8') 
+    # # print "request query:", query
+    # print "request query (json):", json.dumps(query)
+
+    if curNoisePreviewDir == "" or \
+        not os.path.exists(curNoisePreviewDir):
+        curNoisePreviewDir = tempfile.mkdtemp(prefix='glow-noise-')
+
+    cmdLineArgs = "glow --input={0} --preview={1} --verbose".format(curSceneFile, curNoisePreviewDir)
+    print "Calling glow:", cmdLineArgs
+
+    ret = glow.run(cmdLineArgs.split())
+    retVal = json.dumps({'glow':ret}), 500, {'ContentType':'application/json'}
+
+    images = []
+    if ret == 0:
+        print "-" * 80
+        for bmpFile in os.listdir(curNoisePreviewDir):
+            f, e = os.path.splitext(bmpFile)
+
+            bmpPath = curNoisePreviewDir + "/" + bmpFile
+            pngPath = curNoisePreviewDir + "/" + f + ".png"
+            print "{0} -> {1}".format(bmpPath, pngPath)
+            Image.open(bmpPath).save(pngPath, "PNG")
+
+            if False:
+                bmp = Image.open(bmpFile)
+                png = StringIO()
+                bmp.save(png, format="PNG")
+                png_b64 = StringIO()
+                base64.encode(png, png_b64)
+                images.append({
+                    'name':f,
+                    'image':png_b64.getvalue()
+                })
+
+            print "   bmp to png", f 
+
+
+        print "-" * 80
+        # retVal = json.dumps({'images':images}), 200, {'ContentType':'application/json'}
+
+        retVal = json.dumps({'glow':0}), 200, {'ContentType':'application/json'}
+
+    return retVal
+
+@app.route('/glow/noise/<path:path>')
+def static_noise_proxy(path):
+    print "Returning static image of a noise module preview."
+    global curNoisePreviewDir
+    if curNoisePreviewDir != "" and os.path.exists(curNoisePreviewDir):
+        print "img", os.path.join(curNoisePreviewDir, path)
+        return send_from_directory(curNoisePreviewDir, path)
+
+    abort(500)
 
 
 # TODO:1 these two handlers might not be necessary.

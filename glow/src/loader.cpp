@@ -12,6 +12,8 @@
 #include "view_plane.h"
 #include "log_msg.h"
 #include "direction_light.h"
+#include "function.h"
+#include "noise_factory.h"
 
 #include <iostream>
 #include <fstream>
@@ -28,14 +30,25 @@ namespace {
 
 
     const double NANOS_PER_SECOND = 1000000000.0;
-    const char* VERSION_STR = "Glow 0.5.0";
+    const char* VERSION_STR = "Glow 0.6.0";
 
 
     option::ArgStatus Required(const option::Option& option, bool) {
         return option.arg == 0 ? option::ARG_ILLEGAL : option::ARG_OK;
     }
 
-    enum  optionIndex { UNKNOWN, HELP, INPUT, OUTPUT, DEPTH, VERBOSE, VERSION, PARSE };
+    enum optionIndex { 
+        UNKNOWN, 
+        HELP, 
+        INPUT, 
+        OUTPUT, 
+        DEPTH, 
+        VERBOSE, 
+        VERSION, 
+        PARSE, 
+        PREVIEW
+    };
+
     const option::Descriptor usage[] = {
         {UNKNOWN, 0,    "" ,    ""    ,         option::Arg::None,     "USAGE: example [options]\n\nOptions:" },
         {HELP,    0,    "h" ,   "help",         option::Arg::None,     "  --help,      -h  \tPrint usage and exit." },
@@ -45,8 +58,8 @@ namespace {
         {VERBOSE, 0,    "v",    "verbose",      option::Arg::None,     "  --verbose,   -v  \tIncrease verbosity count (default: 0)." },
         {VERSION, 0,    "",     "version",      option::Arg::None,     "  --version,       \tDisplays the version information." },
         {PARSE,   0,    "p",    "parseOnly",    option::Arg::None,     "  --parseOnly, -p  \tJust parse the scene file, don't render anything." },
-        {UNKNOWN, 0,    "" ,    ""   ,          option::Arg::None,     "\nExamples:\n"
-                                                 "  glow --input scene.txt --output scene.png" },
+        {PREVIEW, 0,    "",     "preview",      Required,              "  --preview,       \tThe directory to write previews of the noise library tree." },
+        {UNKNOWN, 0,    "" ,    "",             option::Arg::None,     "\nExamples:\n  glow --input scene.txt --output scene.png" },
         {0,0,0,0,0,0}
     };
     auto const NUM_USAGE = sizeof(usage) / sizeof(usage[0]);
@@ -81,7 +94,12 @@ namespace glow {
             valid = false;
         }
 
-        if ( !options[PARSE] && 
+        if ( options[PREVIEW] && !options[PREVIEW].arg ) {
+            cerr << "Required argument for preview not found.\n";
+            valid = false;
+        }
+
+        if ( !options[PARSE] && !options[PREVIEW] && 
             (!options[OUTPUT] || !options[OUTPUT].arg) ) {
             cerr << "Required argument for output not found.\n";
             valid = false;
@@ -169,6 +187,17 @@ namespace glow {
         auto scene = MakeScene( sp );    
         if ( options[PARSE] )
             return 0;
+
+        if ( options[PREVIEW] ) {
+            auto const & objs   = scene->GetObjects();
+            for(auto const & o : objs){
+                if (auto const func = dynamic_cast<Function*>(o.get())) {
+                    WritePreviewBmps(func->GetModules(), options[PREVIEW].arg);
+                    break;
+                }
+            }
+            return 0;
+        }
 
         auto & vp = scene->GetViewPlane();
         auto const px = vp->GetWidthPixels();

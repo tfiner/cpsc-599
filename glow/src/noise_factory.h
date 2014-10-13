@@ -44,4 +44,7 @@ namespace glow {
     // needing to worry about their lifetime (because of shared_ptr).
     EvalFunc CreateFunctions( NoiseModules& modules, const KeyValuesSeq& kvs );
 
+    // Writes preview BMPs to a file.
+    void WritePreviewBmps(const NoiseModules& modules, std::string path);
+
 }

@@ -240,18 +240,17 @@ namespace {
         if (srcModCount < 0)
             throw std::runtime_error("Source Module Count < 0!");
 
-        auto srcMod = FindSrcModule(modules, kv, "control");
-        if (srcMod){
+        if (auto ctrlMod = FindSrcModule(modules, kv, "control")) {
             LOG_MSG(2, 
                 typeid(*mod).name() 
                 << " adding " 
-                << typeid(*srcMod).name() );
+                << typeid(*ctrlMod).name() );
 
-            moduleList.remove(srcMod);
+            moduleList.remove(ctrlMod);
             if ( auto select = dynamic_cast<Select*>(mod.get()) )
-                select->SetControlModule(*srcMod);
+                select->SetControlModule(*ctrlMod);
             else if ( auto blend = dynamic_cast<Blend*>(mod.get()) )
-                blend->SetControlModule(*srcMod);
+                blend->SetControlModule(*ctrlMod);
             else {
                 throw std::runtime_error("Unknown module with control: " + name);                
             }
@@ -260,8 +259,7 @@ namespace {
 
         for( int i = 0; i < srcModCount; ++i ){
             auto srcKey = GetSourceName(i);
-            auto srcMod = FindSrcModule(modules, kv, srcKey);
-            if (srcMod){
+            if (auto srcMod = FindSrcModule(modules, kv, srcKey)){
                 LOG_MSG(2, 
                     typeid(*mod).name() 
                     << " adding " 
@@ -275,26 +273,32 @@ namespace {
     }
 
 
-    void WriteTestBmp(Module& module){
+    void WritePreviewBmp(Module& module, std::string name){
+        LOG_MSG(1, "Writing " << typeid(module).name() << " to " << name);
+
         utils::NoiseMap heightMap;
         utils::NoiseMapBuilderPlane heightMapBuilder;
-        heightMapBuilder.SetSourceModule (module);
-        heightMapBuilder.SetDestNoiseMap (heightMap);
-        heightMapBuilder.SetDestSize (256, 256);
-        heightMapBuilder.SetBounds (0.0, 20.0, 0.0, 20.0);
-        heightMapBuilder.Build ();
+        heightMapBuilder.SetSourceModule(module);
+        heightMapBuilder.SetDestNoiseMap(heightMap);
+        heightMapBuilder.SetDestSize(256, 256);
+        // TODO:1 Come back and pass in the real viewplane extents, taking
+        // into account the camera position.
+        heightMapBuilder.SetBounds(0.0, 20.0, 0.0, 20.0);
+        heightMapBuilder.Build();
 
         utils::RendererImage renderer;
         utils::Image image;
-        renderer.SetSourceNoiseMap (heightMap);
-        renderer.SetDestImage (image);
-        renderer.Render ();
+        renderer.SetSourceNoiseMap(heightMap);
+        renderer.SetDestImage(image);
+        renderer.Render();
 
         utils::WriterBMP writer;
-        writer.SetSourceImage (image);
-        writer.SetDestFilename ("map.bmp");
-        writer.WriteDestFile ();        
+        writer.SetSourceImage(image);
+        writer.SetDestFilename(name);
+        writer.WriteDestFile();        
     }
+
+
 
 
 } // namespace {
@@ -354,12 +358,20 @@ EvalFunc glow::CreateFunctions( NoiseModules& modules, const KeyValuesSeq& kvs )
             return module->GetValue(x,y,z);
         };
 
-        WriteTestBmp(*moduleList.front());
+        // WriteTestBmp(*moduleList.front(), "map.bmp");
 
     } // else look for glow functions
 
     assert( evalFuncStack.empty() && "Not implemented yet." );
 
     return composition;
+}
+
+
+void glow::WritePreviewBmps(const NoiseModules& modules, std::string path) {
+    for( auto & kv: modules ) {
+        auto filename = path + "/" + kv.first + ".bmp";
+        WritePreviewBmp(*kv.second, filename);
+    }
 }
 

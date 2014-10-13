@@ -41,6 +41,8 @@ namespace glow {
     public:
         Function(int matIdx, const KeyValuesSeq& kvs);
 
+        const NoiseModules& GetModules() const { return modules; }
+
     private:
         bool HitImpl( HitRecord& hr, const Ray& r ) const override;
         bool InsideImpl( const Point3& p ) const override;

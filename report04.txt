@@ -1,7 +1,9 @@
 Hooking up the UI
 
 Research:
-Puredata: prior art, suggested by Prof. Shafae.
+Puredata: prior art, suggested by Prof. Shafae.  
+My comment: Used for audio, messy UI.
+
 
 Goals:
 
@@ -32,6 +34,7 @@ Goals:
 
 3. Connect user interface to server.
     a. Status
+    Done.
 
     b. Network
     c. JSON editor

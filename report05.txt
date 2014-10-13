@@ -1,0 +1,14 @@
+Suggestions from meeting:
+
+Organize notes into different sections.
+See if there's a way to compress the returned image.
+    There is, the header of the XMLHttpRequest can include gzip.
+    Flask-Compress does the deed.
+
+From last report's TODOs:
+    f. Add the other JSON editor (code).
+
+
+Add preview to a noise function.
+
+Add CRUD to network window: Create, Read, Update, Delete.  Read is done.

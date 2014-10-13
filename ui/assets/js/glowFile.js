@@ -27,6 +27,18 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
 
                     editor.editor.set(j);
                     tree.parseJSON(j);
+
+                    client.request({
+                        'url': "glow/preview",
+                        'msg': editor.editor.get(),
+
+                        'callback': function(data, status, jqXhr) {
+                            console.log(data);
+                            console.log(status);
+                            console.log(jqXhr);
+                        }
+                    });
+
                 };
 
                 reader.readAsText(f);
