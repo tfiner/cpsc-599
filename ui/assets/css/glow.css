@@ -33,6 +33,7 @@ body{
     line-height: normal;
     /*padding: 4px 0 6px ;*/
     cursor: move;
+    text-align: left;
 }
 
 canvas {
@@ -76,3 +77,8 @@ canvas {
     margin-right: -50%;
     transform: translate(-50%, -50%);
 }
+
+.ui-button {
+    padding: 4;
+}
+

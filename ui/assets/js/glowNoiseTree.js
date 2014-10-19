@@ -12,6 +12,16 @@ define(
     function($, cytoscape, _) {
         console.log("cytoscape loading...");
 
+        $("#noise_new").button({
+            text: false,            
+            icons: {
+                primary: "icon-plus"
+            }
+        }).click(function(e) {
+            
+        });
+
+
         var tree = {
             cy: cytoscape({
                 container: $('#noise_window')[0],

@@ -8,8 +8,7 @@
         <link rel="stylesheet" href="css/jsoneditor.css">
         <link rel="stylesheet" href="css/jquery-ui.min.css">
 
-        <!-- <link rel="stylesheet" href="css/font-awesome.css">  -->
-        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"> 
+        <link rel="stylesheet" href="css/font-awesome.min.css"> 
         <link rel="stylesheet" href="css/glow.css">        
      </head>
 
@@ -27,25 +26,21 @@
             ] -->
 
             <li data-row="1" data-col="11" data-sizex="8" data-sizey="7">
-                <header>[Scene Editor]</header>
+                <header id="tool_window">
+                    <button id="open"></button>                        
+                    <button id="save"></button>                        
+                    <button id="render"></button>                                            
+                    [Scene Editor]
+                </header>
                 <div id="editor1_window" class="glow-window"></div>
             </li>  
 
             <li data-row="8" data-col="11" data-sizex="8" data-sizey="6">
-                <header>[Noise Tree Editor]</header>
+                <header id="noise_tools">
+                    <button id="noise_new"></button>
+                    [Noise Tree Editor]
+                </header>
                 <div id="noise_window" class="glow-window"></div>
-            </li>
-
-
-            <li data-row="1" data-col="1" data-sizex="10" data-sizey="1">
-                <header>[Tools]</header>
-                <div id="tool_window" class="glow-window">
-                    <div id="toolbar" class="ui-widget-header ui-corner-all">
-                      <button id="open">Open</button>                        
-                      <button id="save">Save</button>                        
-                      <button id="render">Render</button>                        
-                    </div>
-                </div>
             </li>
 
             <li data-row="2" data-col="1" data-sizex="10" data-sizey="7">

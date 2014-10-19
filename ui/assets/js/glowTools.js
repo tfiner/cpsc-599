@@ -5,7 +5,6 @@
 // This file is the module that is responsible for the tools window. 
 
 
-// Prevent drag and drop from opening a json as a new web page.
 define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
     function($, file, client, render, editor) {
         console.log("tools loading...");
@@ -21,6 +20,7 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
         };
 
         $("#open").button({
+            text: false,
             icons: {
                 primary: "icon-folder-open"
             }
@@ -41,6 +41,7 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
         });
 
         $("#save").button({
+            text: false,
             icons: {
                 primary: "icon-save"
             }
@@ -79,6 +80,7 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
         });
 
         $("#render").button({
+            text: false,
             icons: {
                 primary: "icon-camera"
             }

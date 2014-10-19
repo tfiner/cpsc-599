@@ -11,4 +11,5 @@ From last report's TODOs:
 
 Add preview to a noise function.
 
-Add CRUD to network window: Create, Read, Update, Delete.  Read is done.
+Add CRUD to network window: Create, Read, Update, Delete.  
+    Read is done.
