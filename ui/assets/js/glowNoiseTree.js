@@ -9,7 +9,7 @@
 define(
     ['jquery', 'cytoscape', 'underscore', 'editor', 'observer'],
 
-    function($, cytoscape, _, editor) {
+    function($, cytoscape, _, editor, observer) {
 
         var perlinTypes = {
             "frequency":    1.0,
@@ -55,24 +55,15 @@ define(
         var onOk = function() {
             // Build the JSON for a new libnoise node.
             var noiseNode   = { 'lib':  'libnoise', 
-                                'type': $('#nodeType option:selected').attr('name') },
-                // Find the right spot to append the new noise module to.
-                funcs       = editor.editor.node.search('functions'),
-                lastFunc    = funcs != undefined && funcs.length && 
-                              _.has(funcs[0],'node') && _.has(funcs[0].node, 'childs') &&
-                              funcs[0].node.childs.length > 0 ? 
-                              funcs[0].node.childs.length - 1 : -1;
+                                'type': $('#nodeType option:selected').attr('name') };
 
-            if (lastFunc >= 0){
-                // Gather and append the dialog's inputs:
-                $.each($('#nodeEditor input'), 
-                    function(k,v){ 
-                        noiseNode[v.name] = v.value; 
-                    });
+            // Gather and append the dialog's inputs:
+            $.each($('#nodeEditor input'), 
+                function(k,v){ 
+                    noiseNode[v.name] = v.value; 
+                });
 
-                console.log("noiseNode:", noiseNode);
-                funcs[0].node.childs[lastFunc]._onAppend(lastFunc, noiseNode);
-            }
+            observer.sendEvent({name:'newNoiseNode', node:noiseNode});
         }
 
         $("#noise_new").button({

@@ -14,37 +14,33 @@ define(["underscore"],
 
         console.log("observer loading...");
 
-        var observer = {
+        return {
 
-            subscribe: function(evt, observer) {
-                if (!_.has(observers,evt)) {
-                    observers[evt] = [];
+            subscribe: function(evtName, observer) {
+                if (!_.has(observers,evtName)) {
+                    observers[evtName] = [];
                 }
 
-                var dupe = _.find(observers[evt], function(o){return o.prototype == observer.prototype;});
+                var dupe = _.find(observers[evtName], function(o){return o.prototype == observer.prototype;});
                 if (dupe == undefined) {
-                    observers[evt].push(observer);
+                    observers[evtName].push(observer);
                 }
             },
 
             sendEvent: function(evt) {
-                if (_.has(observers,evt)){
-                    _.each(observers[evt], function(o){ 
+                if (_.has(observers,evt.name)){
+                    _.each(observers[evt.name], function(o){ 
                         o(evt); 
                     });
                 }
             },
 
-            unSubscribe: function(evt) {
-                console.log(observers);
-                if (_.has(observers,evt)) {
-                    observers[evt] = []; 
+            unSubscribe: function(evtName) {
+                if (_.has(observers,evtName)) {
+                    observers[evtName] = []; 
                 }
-                console.log(observers);                
             }
         }
 
-        console.log(observer);
-        return observer;
     }
 );
