@@ -23,6 +23,7 @@ require.config({
         status:     'glowStatus',
         client:     'glowClient',
         tools:      'glowTools',
+        observer:   'glowObserver',
         render:     'glowRender'
     }
 });

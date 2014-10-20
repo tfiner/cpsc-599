@@ -79,6 +79,15 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
 
         });
 
+        // $("#sync").button({
+        //     text: false,
+        //     icons: {
+        //         primary: "icon-retweet"
+        //     }
+        // }).click(function(e) {
+
+        // });
+
         $("#render").button({
             text: false,
             icons: {
@@ -102,4 +111,5 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
                 }
             });
         });
+
     });

@@ -82,3 +82,13 @@ canvas {
     padding: 4;
 }
 
+.glow-input { 
+    float: right;
+    text-align: right; 
+}
+
+.glow-label { 
+    float: left;
+}
+
+

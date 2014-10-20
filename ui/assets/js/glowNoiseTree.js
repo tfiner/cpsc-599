@@ -7,10 +7,73 @@
 
 
 define(
-    ['jquery', 'cytoscape', 'underscore'],
+    ['jquery', 'cytoscape', 'underscore', 'editor', 'observer'],
 
-    function($, cytoscape, _) {
+    function($, cytoscape, _, editor) {
+
+        var perlinTypes = {
+            "frequency":    1.0,
+            "lacunarity":   2.0,
+            "octave":       6.0,
+            "quality":      1.0,
+            "seed":         0.0 
+            },
+            noiseTypes = {
+                "perlin":       {name: "Perlin", params: _.extend(perlinTypes, {"persistence":0.5}) },
+                "billow":       {name: "Billow", params: _.extend(perlinTypes, {"persistence":0.5}) },
+                "ridgedmulti":  {name: "Ridged", params: perlinTypes},
+                "scale":        {name: "Scale",  params: {"scale":1.0, "bias":0.0}},
+                "select":       {name: "Select", params: {"edgeFalloff":0.0, "lower":-1.0, "upper":1.0}} 
+            };
+
         console.log("cytoscape loading...");
+
+        var setNoiseType = function(noiseType) {
+            var noise       = _.find(noiseTypes, 
+                    function(v, k){
+                        return k == noiseType;
+                    }),
+                typeParams  = $('#typeParams');
+
+            $('#typeParams p').remove();
+
+            _.each(noise.params, function(defaultVal, name){
+                typeParams
+                    .append($('<p>')
+                        .append($('<label>').text(name))
+                        .append($('<input>', {
+                            type:   "number", 
+                            name:   name, 
+                            id:     name, 
+                            value:  defaultVal,
+                            class:  "glow-input"
+                        }))
+                    );
+                });
+        };
+
+        var onOk = function() {
+            // Build the JSON for a new libnoise node.
+            var noiseNode   = { 'lib':  'libnoise', 
+                                'type': $('#nodeType option:selected').attr('name') },
+                // Find the right spot to append the new noise module to.
+                funcs       = editor.editor.node.search('functions'),
+                lastFunc    = funcs != undefined && funcs.length && 
+                              _.has(funcs[0],'node') && _.has(funcs[0].node, 'childs') &&
+                              funcs[0].node.childs.length > 0 ? 
+                              funcs[0].node.childs.length - 1 : -1;
+
+            if (lastFunc >= 0){
+                // Gather and append the dialog's inputs:
+                $.each($('#nodeEditor input'), 
+                    function(k,v){ 
+                        noiseNode[v.name] = v.value; 
+                    });
+
+                console.log("noiseNode:", noiseNode);
+                funcs[0].node.childs[lastFunc]._onAppend(lastFunc, noiseNode);
+            }
+        }
 
         $("#noise_new").button({
             text: false,            
@@ -18,7 +81,40 @@ define(
                 primary: "icon-plus"
             }
         }).click(function(e) {
-            
+            var nodeType = $("#nodeType");
+
+            $("#nodeType option").remove();
+
+            $.each(noiseTypes, function(key, value) {   
+                var name = value["name"];
+                nodeType
+                    .append($('<option>', { name : key })
+                    .text(name)); 
+            });
+
+            $("#nodeType").change(function(e){
+                var type = $('#nodeType option:selected').attr('name');
+                setNoiseType(type);
+            });
+
+            $("#nodeEditor").dialog({
+                closeOnEscape: true,
+                height: 500,
+                width: 400,
+                buttons: {
+                    Ok: function() {
+                        $(this).dialog("close");
+                        onOk();
+                    }
+                }
+                }).keyup(function(e) {
+                    if (e.keyCode == 13) {
+                        $(this).dialog("close");
+                        onOk();
+                    }
+            });
+
+            setNoiseType("perlin");
         });
 
 
@@ -51,11 +147,6 @@ define(
                         'border-width': 8,
                         'border-color': '#ff0000'
                     }),
-                    // .selector('.faded')
-                    // .css({
-                    //     'opacity': 0.25,
-                    //     'text-opacity': 0
-                    // }),
 
                 layout: {
                     name: 'breadthfirst',

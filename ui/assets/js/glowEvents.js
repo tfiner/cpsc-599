@@ -86,6 +86,10 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
 
     return {
 
+      noiseNodeChanged: function(changeEvt) {
+
+      },
+
       resizeStopped: function(widget) {
         var gridSerialized;
         // console.log("resizeStopped:\n", widget);

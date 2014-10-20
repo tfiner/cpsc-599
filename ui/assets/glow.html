@@ -29,6 +29,7 @@
                 <header id="tool_window">
                     <button id="open"></button>                        
                     <button id="save"></button>                        
+                    <!-- <button id="sync" title="Synchronize"></button>                                             -->
                     <button id="render"></button>                                            
                     [Scene Editor]
                 </header>
@@ -66,23 +67,37 @@
     </body>
 
 
-<!-- Hidden by default, this is what the dialog code uses to display text. -->
-<div id="dialog" title="Dialog" style="display: none">
-  <p>Dialog Text</p>
-</div>    
+    <!-- Hidden by default, this is what the dialog code uses to display text. -->
+    <div id="dialog" title="Dialog" style="display: none">
+      <p>Dialog Text</p>
+    </div>    
 
-<!-- Hidden by default, this is what the dialog code uses to query for a filename. -->
-<div id="dialogSaveAs" title="Save As" style="display: none">
-    <input type="text" name="fileName" id="fileName" value="glow.json" class="text ui-widget-content ui-corner-all">  
-</div>    
+    <!-- Hidden by default, this is what the dialog code uses to query for a filename. -->
+    <div id="dialogSaveAs" title="Save As" style="display: none">
+        <input type="text" name="fileName" id="fileName" value="glow.json" class="text ui-widget-content ui-corner-all">  
+    </div>    
 
-<!-- This retarded file input is needed to pop the open file dialog.  The button 
-    that the user clicks on forwards its click to this control.  The good news is 
-    that even though it is hidden, it still works.  -->
-<input id="fileInput" type="file" name="files[]" style="display: none"/>
+    <!-- This retarded file input is needed to pop the open file dialog.  The button 
+        that the user clicks on forwards its click to this control.  The good news is 
+        that even though it is hidden, it still works.  -->
+    <input id="fileInput" type="file" name="files[]" style="display: none"/>
 
-<!-- The same for Save As, for a dialog... -->
-<a id="fileSaveAs" href="#" download="glow.json"></a>
-<!-- <a id="fileSaveAs" href="#" download="glow.json" style="display: none"></a> -->
+    <!-- The same for Save As, for a dialog... -->
+    <a id="fileSaveAs" href="#" download="glow.json"></a>
+
+    <!-- Hidden by default, this is what the dialog code uses to edit a noise node. -->
+    <div id="nodeEditor" title="Edit Node" style="display: none">
+        <p>
+            <label>Name:</label>
+            <input type="text" name="nodeName" id="nodeName" value="" class="glow-input text ui-widget-content ui-corner-all"/>
+        </p>
+
+        <p><label>Type:</label>
+            <select name="nodeType" id="nodeType" class="glow-input text ui-widget-content ui-corner-all">
+            </select>
+        </p>
+
+        <div id="typeParams"></div>
+    </div>    
 
 </html>
