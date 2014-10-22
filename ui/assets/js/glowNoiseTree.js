@@ -238,6 +238,21 @@ define(
             tree.parseJSON(evt.scene);
         });
 
+
+        (function() {        
+            var timer;
+            $(window).bind('scroll',function () {
+                clearTimeout(timer);
+                timer = setTimeout( refresh , 150 );
+                tree.cy.zoomingEnabled(false);
+            });
+            var refresh = function () { 
+                console.log('Stopped scrolling.'); 
+                tree.cy.zoomingEnabled(true);
+            };
+        })();
+
+
         // $('#noise_window').bind("contextmenu",function(e){
         //     console.log("clicked");
         // });
