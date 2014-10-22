@@ -47,6 +47,10 @@ define(
             }
         });
 
+        observer.subscribe("newScene", function(evt) {
+            editor.set(evt.scene);
+        });
+
         return {
             div:    div,
             editor: editor

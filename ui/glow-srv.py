@@ -153,13 +153,17 @@ def static_js_proxy(path):
 def static_css_proxy(path):
     return app.send_static_file(os.path.join('css', path))
 
-@app.route('/font/<path:path>')
-def static_font_proxy(path):
-    return app.send_static_file(os.path.join('font', path))
+@app.route('/fonts/<path:path>')
+def static_fonts_proxy(path):
+    return app.send_static_file(os.path.join('fonts', path))
 
 @app.route('/images/<path:path>')
 def static_images_proxy(path):
     return app.send_static_file(os.path.join('images', path))
+
+@app.route('/scenes/<path:path>')
+def static_scene_proxy(path):
+    return app.send_static_file(os.path.join('scenes', path))
 
 
 if __name__ == "__main__":

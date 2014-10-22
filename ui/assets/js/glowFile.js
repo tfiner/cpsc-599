@@ -7,8 +7,9 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
-    function($, editor, tree, status, client) {
+define( ['jquery', 'status', 'observer'],
+    function($, status, observer) {
+
         console.log("tools loading...");
 
         return {
@@ -25,20 +26,10 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client'],
                     var t = e.currentTarget.result,
                         j = JSON.parse(t);
 
-                    editor.editor.set(j);
-                    tree.parseJSON(j);
-
-                    client.request({
-                        'url': "glow/preview",
-                        'msg': editor.editor.get(),
-
-                        'callback': function(data, status, jqXhr) {
-                            console.log(data);
-                            console.log(status);
-                            console.log(jqXhr);
-                        }
+                    observer.sendEvent({
+                        name:"newScene",
+                        scene:j
                     });
-
                 };
 
                 reader.readAsText(f);

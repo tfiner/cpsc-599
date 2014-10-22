@@ -17,6 +17,8 @@ define(["underscore"],
         return {
 
             subscribe: function(evtName, observer) {
+                // console.log("sub", evtName, observer);
+
                 if (!_.has(observers,evtName)) {
                     observers[evtName] = [];
                 }
@@ -28,6 +30,8 @@ define(["underscore"],
             },
 
             sendEvent: function(evt) {
+                console.log("sendEvt", evt);
+
                 if (_.has(observers,evt.name)){
                     _.each(observers[evt.name], function(o){ 
                         o(evt); 

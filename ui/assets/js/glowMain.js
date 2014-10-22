@@ -25,8 +25,6 @@ define(
         // $( document ).tooltip();
 
         var i,
-            gridSerialized, 
-            gridJson,
             panes = $(".gridster li"), 
             gridster = $(".gridster ul").gridster({
                 widget_margins: [10, 10],

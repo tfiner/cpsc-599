@@ -5,8 +5,8 @@
 // This file is the module that is responsible for the tools window. 
 
 
-define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
-    function($, file, client, render, editor) {
+define(['jquery', 'file', 'client', 'render', 'editor', 'observer', 'jquery_ui'],
+    function($, file, client, render, editor, observer) {
         console.log("tools loading...");
 
         var saveJson = function() {
@@ -19,10 +19,20 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
             });
         };
 
+        $("#new").button({
+            text: false,
+            icons: {
+                primary: "fa fa-file"
+            }
+        }).click(function(e) {
+            e.preventDefault();
+            observer.sendEvent({name:"requestNewScene"});
+        });
+
         $("#open").button({
             text: false,
             icons: {
-                primary: "icon-folder-open"
+                primary: "fa fa-folder-open"
             }
         }).click(function(e) {
             // Forward the click of this button to a hidden file input control.
@@ -38,12 +48,13 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
         $('#fileInput').on('change', function(evt) {
             var f = evt.target.files[0];
             file.read(f);
+            $('#fileInput').val("");
         });
 
         $("#save").button({
             text: false,
             icons: {
-                primary: "icon-save"
+                primary: "fa fa-save"
             }
         }).click(function(e) {
             // Forward the click of this button to a hidden link.
@@ -91,24 +102,15 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'jquery_ui'],
         $("#render").button({
             text: false,
             icons: {
-                primary: "icon-camera"
+                primary: "fa fa-camera"
             }
         }).click(function(e) {
             $("#renderImage").hide();
             $("#renderBusy").show();
 
-            client.request({
-                'url': "glow/render",
-                'msg': editor.editor.get(),
-
-                'callback': function(data, status, jqXhr) {
-                    console.log(data);
-                    console.log(status);
-                    console.log(jqXhr);
-                    if (jqXhr.status == 200) {
-                        render.setImage(data);
-                    }
-                }
+            observer.sendEvent({
+                name:   "requestRenderScence",
+                scene:  editor.editor.get() 
             });
         });
 

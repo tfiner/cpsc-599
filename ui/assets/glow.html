@@ -27,6 +27,7 @@
 
             <li data-row="1" data-col="11" data-sizex="8" data-sizey="7">
                 <header id="tool_window">
+                    <button id="new"></button>                        
                     <button id="open"></button>                        
                     <button id="save"></button>                        
                     <!-- <button id="sync" title="Synchronize"></button>                                             -->
@@ -49,7 +50,7 @@
                 <div id="render_window" class="glow-window">
                     <img id="renderImage" src="images/glow.png" />
                     <div id="renderBusy" style="display:none;">
-                        <i class="icon-refresh icon-spin" style="font-size:256px"></i>
+                        <i class="fa fa-spin fa-cog" style="font-size:128px"></i>
                     </div>                    
                 </div>
             </li>
@@ -89,7 +90,7 @@
     <div id="nodeEditor" title="Edit Node" style="display: none">
         <p>
             <label>Name:</label>
-            <input type="text" name="nodeName" id="nodeName" value="" class="glow-input text ui-widget-content ui-corner-all"/>
+            <input type="text" name="name" id="name" value="" class="glow-input text ui-widget-content ui-corner-all"/>
         </p>
 
         <p><label>Type:</label>
