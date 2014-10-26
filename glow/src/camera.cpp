@@ -16,9 +16,6 @@
 #include "scene_sampler.h"
 #include "log_msg.h"
 
-
-#include "camera_macros.h"
-
 #include <tbb/tbb.h>
 
 #include <iostream>
@@ -123,17 +120,45 @@ Camera::~Camera() {}
 
 void Camera::Render( Scene& s ) {
     auto const & vp         = s.GetViewPlane();
-    auto const width        = vp->GetWidthPixels(); 
-    auto const height       = vp->GetHeightPixels(); 
-    auto colorFilm = ColorFilm( width * height, Color(0,0,0) );
 
-    // Initialize default depth value to 0.0f.
+    auto xBegin = 0u;
+    auto xEnd   = 0u;
+    std::tie(xBegin, xEnd)  = vp->GetHSpanPixels();
+
+    auto yBegin = 0u;
+    auto yEnd   = 0u;
+    std::tie(yBegin, yEnd)  = vp->GetVSpanPixels();
+
+    auto const width        = xEnd - xBegin; 
+    auto const height       = yEnd - yBegin;
+
+    LOG_MSG(1, "Rendering " 
+        << "x0: " << xBegin << " "
+        << "x1: " << xEnd << " "
+        << "y0: " << yBegin << " "
+        << "y1: " << yEnd << " "
+        << "width: " << width << " "
+        << "height: " << height);
+
+    if (width == 0 || height == 0) {
+        LOG_MSG(0, "Returning without rendering, " 
+            << "width: " << width << " "
+            << "height: " << height);
+        return;
+    } 
+    auto colorFilm = ColorFilm( width * height, Color(0,0,0) );
+    LOG_MSG(0, 
+        "color file size: " << colorFilm.size()
+    );
+
+
     DepthFilm depthFilm( width * height, -1.0f );
 
     FrameParams fp;
     fp.pixelSize = vp->GetPixelSize();
-    fp.centerX = (width - 1.0) * 0.5;
-    fp.centerY = (height - 1.0) * 0.5;
+
+    fp.centerX = (xBegin + xEnd - 1) * 0.5;
+    fp.centerY = (yBegin + yEnd - 1) * 0.5;
 
     // Create our orthonormal basis, using Suttern, pg. 159.
     fp.w = direction.normalized();
@@ -142,9 +167,55 @@ void Camera::Render( Scene& s ) {
 
     Roll(fp.u, fp.v, fp.w);
 
-    // Specialized macros that hide single / multithreading.
-    RAYTRACER_LAMBDA
-    RAYTRACER_LOOP
+    auto raytrace = [&colorFilm, &s, this, &fp, &depthFilm,
+                    yBegin, xBegin, width](const tbb::blocked_range2d<unsigned int>& range){
+        // The sampler must be allocated on a per thread basis.
+        auto sampler = s.CloneSampler(); 
+        auto const numSamples = s.GetNumSamples();
+
+        // 
+        auto const y0 = range.rows().begin();
+        auto const y1 = range.rows().end();
+        auto const x0 = range.cols().begin();
+        auto const x1 = range.cols().end();
+        // LOG_MSG(0, 
+        //     "x0: " << x0 << " x1: " << x1 << " " 
+        //     "y0: " << y0 << " y1: " << y1 
+        // );
+
+        for( auto y = y0; y < y1; ++y ) {
+            for( auto x = x0; x < x1; ++x ) {
+                auto const samples = sampler->GenerateN(numSamples);
+                auto const results = RenderPixel(s, samples, fp, x, y);
+                auto const offset  = (y - yBegin) * width + (x - xBegin);
+                assert(offset < colorFilm.size());
+                colorFilm[offset] = results.color;
+                if ( results.closest != std::numeric_limits<float>::max() )
+                    depthFilm[offset] = results.closest;
+            }
+        }
+    };
+
+    tbb::parallel_for(
+        tbb::blocked_range2d<unsigned int>(yBegin, yEnd, 8, xBegin, xEnd, 8),
+        raytrace
+    );    
+
+// Keep around for testing.
+#if 0
+    auto sampler = s.CloneSampler(); 
+    auto samples = sampler->GenerateN(s.GetNumSamples());
+    for ( auto y = yBegin; y < yEnd; ++y ) {
+        for ( auto x = xBegin; x < xEnd; ++x ) {
+            auto results = RenderPixel(s, samples, fp, x, y);
+            auto offset  = (y - yBegin) * width + (x - xBegin);
+            assert(offset < colorFilm.size());
+            colorFilm[offset] = results.color;
+            // if ( results.closest != std::numeric_limits<float>::max() )
+            //     depthFilm[offset] = results.closest;            
+        }
+    }
+#endif
 
     s.GetColorRecorder()->RecordColor( colorFilm );
 
@@ -167,7 +238,7 @@ void Camera::Roll(Vector3& u, Vector3& v, Vector3& w) const {
 RenderResults Camera::RenderPixel(const Scene& s, 
                          const Samples& samples, 
                          const FrameParams& fp, 
-                         int x, int y) {
+                         int x, int y) const {
 
     auto const & sceneSampler = s.GetSceneSampler();
 

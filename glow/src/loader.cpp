@@ -46,19 +46,22 @@ namespace {
         VERBOSE, 
         VERSION, 
         PARSE, 
-        PREVIEW
+        PREVIEW,
+        IMG_AREA
     };
 
     const option::Descriptor usage[] = {
-        {UNKNOWN, 0,    "" ,    ""    ,         option::Arg::None,     "USAGE: example [options]\n\nOptions:" },
-        {HELP,    0,    "h" ,   "help",         option::Arg::None,     "  --help,      -h  \tPrint usage and exit." },
-        {INPUT,   0,    "i",    "input",        Required,              "  --input,     -i  \tThe file name of the input file scene (required)." },
-        {OUTPUT,  0,    "o",    "output",       Required,              "  --output,    -o  \tThe file name of the rendering (required)." },
-        {DEPTH,   0,    "d",    "depth",        Required,              "  --depth,     -d  \tThe file name of a depth image (optional)." },
-        {VERBOSE, 0,    "v",    "verbose",      option::Arg::None,     "  --verbose,   -v  \tIncrease verbosity count (default: 0)." },
-        {VERSION, 0,    "",     "version",      option::Arg::None,     "  --version,       \tDisplays the version information." },
-        {PARSE,   0,    "p",    "parseOnly",    option::Arg::None,     "  --parseOnly, -p  \tJust parse the scene file, don't render anything." },
-        {PREVIEW, 0,    "",     "preview",      Required,              "  --preview,       \tThe directory to write previews of the noise library tree." },
+        {UNKNOWN,   0,    "" ,    ""    ,         option::Arg::None,     "USAGE: example [options]\n\nOptions:" },
+        {HELP,      0,    "h" ,   "help",         option::Arg::None,     "  --help,      -h  \tPrint usage and exit." },
+        {INPUT,     0,    "i",    "input",        Required,              "  --input,     -i  \tThe file name of the input file scene (required)." },
+        {OUTPUT,    0,    "o",    "output",       Required,              "  --output,    -o  \tThe file name of the rendering (required)." },
+        {DEPTH,     0,    "d",    "depth",        Required,              "  --depth,     -d  \tThe file name of a depth image (optional)." },
+        {VERBOSE,   0,    "v",    "verbose",      option::Arg::None,     "  --verbose,   -v  \tIncrease verbosity count (default: 0)." },
+        {VERSION,   0,    "",     "version",      option::Arg::None,     "  --version,       \tDisplays the version information." },
+        {PARSE,     0,    "p",    "parseOnly",    option::Arg::None,     "  --parseOnly, -p  \tJust parse the scene file, don't render anything." },
+        {PREVIEW,   0,    "",     "preview",      Required,              "  --preview,       \tThe directory to write previews of the noise library tree." },    
+        {IMG_AREA,  0,    "",     "imageArea",    Required,              "  --imageArea,     \tX0,X1,Y0,Y1 separated by commas (e.g. '--imgArea 256,512,0,256')." },
+
         {UNKNOWN, 0,    "" ,    "",             option::Arg::None,     "\nExamples:\n  glow --input scene.txt --output scene.png" },
         {0,0,0,0,0,0}
     };
@@ -199,7 +202,36 @@ namespace glow {
             return 0;
         }
 
-        auto & vp = scene->GetViewPlane();
+        if ( options[IMG_AREA] ) {
+            std::stringstream ss;
+            ss << options[IMG_AREA].arg;
+
+            auto x0 = 0;
+            auto x1 = 0;
+            auto y0 = 0;
+            auto y1 = 0;
+            auto dummy = ' ';
+
+            if (!(ss >> x0 >> dummy >> x1 >> dummy >> y0 >> dummy >> y1)) {
+                LOG_MSG(0, "Couldn't parse image area comma delimited string: " 
+                    << "'" << options[IMG_AREA].arg << "'");
+                return -1;
+            }
+
+            auto & vp = scene->GetViewPlane();
+
+            LOG_MSG(1, "Setting image area to: "
+                << "x0: " << x0 << " "
+                << "x1: " << x1 << " "
+                << "y0: " << y0 << " "
+                << "y1: " << y1
+            );
+
+            vp->SetImgAreaPixels(x0, x1, y0, y1);
+        }
+
+
+        auto const & vp = scene->GetViewPlane();
         auto const px = vp->GetWidthPixels();
         auto const py = vp->GetHeightPixels();
         if (options[VERBOSE]) {

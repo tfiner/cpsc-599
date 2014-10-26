@@ -88,8 +88,10 @@ std::ostream& operator<<(std::ostream& os, const LightParams& lp) {
 
 std::ostream& operator<<(std::ostream& os, const ViewPlaneParams& vp) {
     os  <<   "ViewPlane:\n"
-        <<   "   width:     " << vp.width << "\n"
-        <<   "   height:    " << vp.height << "\n"
+        <<   "   x0:        " << vp.x0 << "\n"
+        <<   "   x1:        " << vp.x1 << "\n"
+        <<   "   y0:        " << vp.y0 << "\n"
+        <<   "   y1:        " << vp.y1 << "\n"
         <<   "   pixelSize: " << vp.pixelSize << "\n";
     return os;
 }

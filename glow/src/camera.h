@@ -72,7 +72,7 @@ namespace glow {
         RenderResults RenderPixel(const Scene& s, 
                                  const Samples& samples, 
                                  const FrameParams& fp, 
-                                 int x, int y);
+                                 int x, int y) const;
 
     };
 

@@ -115,7 +115,7 @@ namespace {
 
     ViewPlanePtr MakeViewPlane(const SceneParams& sp) {
         auto const& vp = sp.viewPlane;
-        return ViewPlanePtr(new ViewPlane(vp.width, vp.height, vp.pixelSize));
+        return ViewPlanePtr(new ViewPlane(vp.x0, vp.x1, vp.y0, vp.y1, vp.pixelSize));
     }
 
 

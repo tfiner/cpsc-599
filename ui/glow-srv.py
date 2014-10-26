@@ -82,6 +82,37 @@ def render():
 
     return retVal
 
+
+# /glow/render/tile/tiles/1/2_2.jpg
+@app.route('/glow/render/tiles/<int:zoom>/<path:tileId>')
+def render_tile(zoom, tileId):
+    print "Request for tile: {1} at zoom {0}".format(zoom, tileId)
+
+    col,row = tileId.split('.')[0].split('_')
+
+    x0 = (int(col)-1) * 256
+    x1 = x0 + 256
+
+    y0 = (int(row)-1) * 256
+    y1 = y0 + 256
+
+    (handle, outputName) = tempfile.mkstemp(suffix='.png', dir="assets/tiles", prefix='tile')
+
+    cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose". \
+        format(curSceneFile, outputName, x0, x1, y0, y1)
+
+    print "Calling glow:", cmdLineArgs
+
+    ret = glow.run(cmdLineArgs.split())
+    if ret == 0:
+        imgName = os.path.basename(outputName)
+        retImg = os.path.join('tiles', imgName)
+        # print "retImg", retImg
+        return app.send_static_file(retImg)
+
+    abort(500)
+
+
 @app.route('/glow/preview')
 def preview():
     global curNoisePreviewDir
@@ -135,7 +166,6 @@ def preview():
 
 @app.route('/glow/noise/<path:path>')
 def static_noise_proxy(path):
-    print "Returning static image of a noise module preview."
     global curNoisePreviewDir
     if curNoisePreviewDir != "" and os.path.exists(curNoisePreviewDir):
         print "img", os.path.join(curNoisePreviewDir, path)

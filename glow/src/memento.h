@@ -54,9 +54,9 @@ namespace glow {
     };
 
     struct ViewPlaneParams {
-        ViewPlaneParams() : width(0), height(0), pixelSize(0.0f) {}
-        int width;
-        int height;
+        ViewPlaneParams() : x0(0), x1(0), y0(0), y1(0), pixelSize(0.0f) {}
+        int x0, x1;
+        int y0, y1;
         float pixelSize;
     };
 

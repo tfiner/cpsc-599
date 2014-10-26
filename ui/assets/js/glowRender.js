@@ -6,7 +6,7 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define(['jquery', 'underscore', 'observer', 'jquery_ui'],
+define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
     function($, _, observer) {
         // Resizes the parent cell of the render image to fit the image.
         var resizeCell = function() {
@@ -23,18 +23,36 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui'],
                 newCellHeight = cellHeight + deltaCellHeight;
 
             gridster.resize_widget(cell, newCellWidth, newCellHeight);
-        };
+            };
 
         console.log("render loading...");
 
-        observer.subscribe("renderScene", function(evt) {
-            var img = $("#renderImage");
-            img.attr("src", "data:image/png;base64," + evt.image);
+        // observer.subscribe("renderScene", function(evt) {
+        //     var img = $("#renderImage");
+        //     img.attr("src", "data:image/png;base64," + evt.image);
 
-            resizeCell();
+        //     resizeCell();
 
-            img.show();
-            $("#renderBusy").hide();
+        //     img.show();
+        //     $("#renderBusy").hide();
+        // });
+
+        observer.subscribe("newScene", function(evt) {
+            // Tell the tiles to start requesting new renders.
+            $('#tiledRenderImage').tiles('zoom', 1);
+            $("#renderImage").hide();
+        });
+
+
+        $('#tiledRenderImage').tiles({
+          original: {
+            width:  2048,                
+            height: 2048,                
+          },
+          basePath: "glow/render/",     
+          loading:  "images/load.gif",      // Placeholder image for loading images
+          zoom: 0,                          // Show the original content (i.e. the splash screen)
+          tileSize: 256
         });
 
         return {

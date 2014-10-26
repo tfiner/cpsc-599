@@ -5,24 +5,66 @@
 
 #pragma once
 
+#include "log_msg.h"
+#include <tuple>
+
 namespace glow {
 
 
     class ViewPlane {
     public:
-        ViewPlane(int w, int h, float ps) : width(w), height(h), pixelSize(ps) {}
+        ViewPlane(int x0, int x1, int y0, int y1, float ps) : 
+            x0_(x0), x1_(x1), 
+            y0_(y0), y1_(y1), 
+            pixelSize_(ps) {}            
 
-        int GetWidthPixels() const { return static_cast<int>((width / pixelSize) + 0.5f); }
-        int GetHeightPixels() const { return static_cast<int>((height / pixelSize) + 0.5f); }
-        int GetWidthWorldUnits() const { return width; }
-        int GetHeightWorldUnits() const { return height; }
-        float GetPixelSize() const { return pixelSize; }
+        // Returns the horizontal span [X0, X1)
+        std::tuple<unsigned int,unsigned int> GetHSpanPixels() const {
+            auto x0 = static_cast<unsigned int>(x0_ / pixelSize_);
+            auto x1 = static_cast<unsigned int>((x1_ / pixelSize_) + 0.5f);
+            return std::make_tuple(x0, x1);
+        }
+
+        // Returns the vertical span [Y0, Y1)
+        std::tuple<unsigned int,unsigned int> GetVSpanPixels() const {
+            auto y0 = static_cast<unsigned int>(y0_ / pixelSize_);
+            auto y1 = static_cast<unsigned int>((y1_ / pixelSize_) + 0.5f);
+            return std::make_tuple(y0, y1);
+        }
+
+        int GetWidthPixels() const { 
+            auto const span = GetHSpanPixels();        
+            return std::get<1>(span) - std::get<0>(span);
+        }
+
+        int GetHeightPixels() const { 
+            auto const span = GetVSpanPixels();        
+            return std::get<1>(span) - std::get<0>(span);
+        }
+
+        void SetImgAreaPixels(int x0, int x1, int y0, int y1) {
+            x0_ = x0 * pixelSize_;
+            x1_ = x1 * pixelSize_;
+            y0_ = y0 * pixelSize_;
+            y1_ = y1 * pixelSize_;
+
+            LOG_MSG(1, "Viewplane  " 
+                << "pixel size: " << pixelSize_ << " "
+                << "x0: " << x0_ << " "
+                << "x1: " << x1_ << " "
+                << "y0: " << y0_ << " "
+                << "y1: " << y1_ );
+
+        }
+
+        float GetPixelSize() const { return pixelSize_; }
 
     private:
-        // World units
-        int width;
-        int height;
-        float pixelSize;        
+        // Viewplane in world units
+        float x0_, x1_;
+        float y0_, y1_;
+
+        float pixelSize_;        
     };
 
 

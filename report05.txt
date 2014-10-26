@@ -9,7 +9,15 @@ From last report's TODOs:
     f. Add the other JSON editor (code).
 
 
-Add preview to a noise function.
+DONE!  Add preview to a noise function.
 
 Add CRUD to network window: Create, Read, Update, Delete.  
     Read is done.
+
+    It is taking too long to get all the noise editor functionality in.  I've decided to disable the UI for that functionality and concentrate on the other items I need to get done. 
+
+
+Started working with the panoramic viewer at http://www.dimin.net/software/panojs/.
+Unfortunately, while the viewer itself has all the features I want (pan and zoom), it is sorely lacking in my API requirements:
+must play well with others (little to no globals).  It is a collection of JS files that are littered with globals, including functions named things like "callback" that will surely clash with my other libraries and code.
+

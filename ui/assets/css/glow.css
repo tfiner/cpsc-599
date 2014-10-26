@@ -4,6 +4,7 @@
     CPSC-599
 */
 
+/* Turn off retarded text selection.  */ 
 body{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -57,23 +58,21 @@ canvas {
     margin-top: -0.5em;
 }
 
-/*.ui-button-icon-only .ui-icon[class*=" icon-"] {
-     Bump it - jQuery UI is -8px 
-    height: 24px;
-    width: 24px;
-}
-*/
-
 .ui-button-icon-only .ui-icon {
     margin-left: none;
     height: 24px;
     width: 24px;
+    font-size: 1em;
+}
+
+button.ui-button-icon-only {
+    width: 2em;
 }
 
 .ui-icon  {
     height: inherit;
     width: inherit;
-    margin-left: -50%;
+    /*margin-left: -32px;*/
 }
 
 
@@ -93,6 +92,16 @@ canvas {
     transform: translate(-50%, -50%);
 }
 
+#tiledRenderImage {
+    width: 512px;
+    height: 512px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
 #renderBusy {
     position: absolute;
     top: 50%;
@@ -103,6 +112,7 @@ canvas {
 
 .ui-button {
     padding: 4;
+    margin-right: 0;
 }
 
 .glow-input { 
@@ -114,4 +124,10 @@ canvas {
     float: left;
 }
 
-
+html, body, div, span, object,
+form, input, h1, h2, button, label, a, img {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  /* this will work for QtWebKit in future */
+  -webkit-user-drag: none;
+}

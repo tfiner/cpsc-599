@@ -96,16 +96,48 @@ namespace {
 
     void LoadViewPlane(SceneParams& sp, json::Object& jsonObj){
         /*
+            Version 1:
             "viewPlane": {
                 "width":        7,
                 "height":       7,
                 "pixelSize":    0.0125
             }
+            Version 2:
+            "viewPlane": {
+                "x0":           0,
+                "x1":           7,
+                "y0":           0,
+                "y1":           7,
+                "pixelSize":    0.0125
+            }
         */
         auto const & vp = (json::Object)(jsonObj["viewPlane"]);
-        LoadNumber( sp.viewPlane.width,     vp["width"] );
-        LoadNumber( sp.viewPlane.height,    vp["height"] );
-        LoadNumber( sp.viewPlane.pixelSize, vp["pixelSize"] );
+
+        // Try loading version 2.
+        try {
+            LoadNumber( sp.viewPlane.x0,        vp["x0"] );
+            LoadNumber( sp.viewPlane.x1,        vp["x1"] );
+            LoadNumber( sp.viewPlane.y0,        vp["y0"] );
+            LoadNumber( sp.viewPlane.y1,        vp["y1"] );
+
+        // Failing that, load old version 1.
+        } catch(const json::Exception&) {
+            {
+                auto width  = 0;
+                LoadNumber( width,     vp["width"] );
+                sp.viewPlane.x0 = 0; 
+                sp.viewPlane.x1 = width;
+            }
+            {
+                auto height = 0;
+                LoadNumber( height,    vp["height"] );
+                sp.viewPlane.y0 = 0; 
+                sp.viewPlane.y1 = height;
+            }
+        }
+
+        // same for both versions...
+        LoadNumber( sp.viewPlane.pixelSize, vp["pixelSize"] );        
     }
 
 
