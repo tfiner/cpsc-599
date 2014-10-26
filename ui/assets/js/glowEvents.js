@@ -7,8 +7,8 @@
 
 
 // Prevent drag and drop from opening a json as a new web page.
-define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
-  function($, editor, tree, status, client, file) {
+define( ['jquery', 'noiseTree', 'status', 'client', 'file'],
+  function($, tree, status, client, file) {
     console.log("events loading...");    
     // console.log("   $", $);    
     // console.log("   editor", editor);    
@@ -39,36 +39,6 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
         file.read(f);
     });
 
-    // Use cytoscapes select event to select the corresponding
-    // node in the json editor.
-    tree.cy.bind('select', function(evt){
-      // console.log('select', evt);
-      if (!_.has(evt, 'cyTarget') ||
-          !_.has(evt.cyTarget, '_private') ||
-          !_.has(evt.cyTarget._private, 'ids') )
-        return;
-
-      var ids = _.keys(evt.cyTarget._private.ids);
-      if (ids.length <= 0 )
-        return;
-
-      // console.log("ids", ids);
-      // console.log("editor", editor);
-      var results = editor.editor.search(ids[0]),
-          result = _.find(results, function(r){
-            return r.node.getValue() == ids[0];
-          });
-
-      // console.log("results", results);
-      // console.log("result", result);
-      if (result) {
-        editor.editor.search("");
-        editor.editor.collapseAll();
-        result.node.scrollTo();
-      }
-
-    });
-
     var resizeGlow = function(widget) {
       // console.log("resizing: ", widget);
       var newHeight = widget.height() - widget.children("header").height() * 2,
@@ -85,21 +55,6 @@ define( ['jquery', 'editor', 'noiseTree', 'status', 'client', 'file'],
     };
 
     return {
-
-      noiseNodeChanged: function(changeEvt) {
-
-      },
-
-      resizeStopped: function(widget) {
-        var gridSerialized;
-        // console.log("resizeStopped:\n", widget);
-
-        if (!_.has(widget, "length")) {
-          return;
-        }
-
-        resizeGlow(widget);
-      },
 
       resizing: function(widget) {
         // console.log("resizing:\n", widget);

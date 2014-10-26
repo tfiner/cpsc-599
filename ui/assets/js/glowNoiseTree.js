@@ -234,11 +234,82 @@ define(
             setNoiseType("perlin");
         });
 
+        $("#noise_delete").button({
+            text: false,            
+            icons: {
+                primary: "fa fa-minus"
+            }
+        }).click(function(e) {
+            tree.cy.elements(":selected").remove();
+        });
+
+        $("#noise_link").button({
+            text: false,            
+            icons: {
+                primary: "fa fa-link"
+            }
+        }).click(function(e) {
+            $("#nodeEditor").dialog({
+                title: "Link Nodes",
+                closeOnEscape: true,
+                height: 500,
+                width: 400,
+                buttons: {
+                    Ok: function() {
+                        $(this).dialog("close");
+                        onOk();
+                    }
+                }
+                }).keyup(function(e) {
+                    if (e.keyCode == 13) {
+                        $(this).dialog("close");
+                        onOk();
+                    }
+            });            
+        });
+
+        $("#noise_unlink").button({
+            text: false,            
+            icons: {
+                primary: "fa fa-unlink"
+            }
+        }).click(function(e) {
+        });
+
+        // Node selection
+        tree.cy.on('tap', 'node', function(evt) {
+            // console.log('select', evt);
+            if (!_.has(evt, 'cyTarget') ||
+                !_.has(evt.cyTarget, '_private') ||
+                !_.has(evt.cyTarget._private, 'ids'))
+                return;
+
+            var ids = _.keys(evt.cyTarget._private.ids);
+            if (ids.length <= 0)
+                return;
+
+            observer.sendEvent({
+                name: "treeSelectNode",
+                id: ids[0]
+            });
+        });
+
+        // Edge selection
+        tree.cy.on('tap', function(evt) {
+            console.log('tap', evt);
+            // TODO:1 Fix selection for edges.
+            evt.cy.elements(":selected").css({'line-color':'red'})
+            // Doesn't do what I think it does...
+            // evt.cy.forceRender();
+        });
+
         observer.subscribe("newScene", function(evt) {
             tree.parseJSON(evt.scene);
         });
 
 
+        // Turns off zoom while scrolling, this prevents the case where a user
+        // is scrolling the window, and ends up zooming.
         (function() {        
             var timer;
             $(window).bind('scroll',function () {

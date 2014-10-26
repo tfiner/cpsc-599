@@ -51,6 +51,23 @@ define(
             editor.set(evt.scene);
         });
 
+        observer.subscribe("treeSelectNode", function(evt) {
+            // console.log("ids", ids);
+            // console.log("editor", editor);
+            var results = editor.search(evt.id),
+                result = _.find(results, function(r) {
+                    return r.node.getValue() == evt.id;
+                });
+
+            // console.log("results", results);
+            // console.log("result", result);
+            if (result) {
+                editor.search("");
+                editor.collapseAll();
+                result.node.scrollTo();
+            }
+        });
+        
         return {
             div:    div,
             editor: editor
