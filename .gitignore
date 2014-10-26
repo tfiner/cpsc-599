@@ -2,3 +2,4 @@
 *.so
 glow/debug/
 *.bmp
+ui/assets/tiles
