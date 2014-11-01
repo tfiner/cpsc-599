@@ -157,8 +157,10 @@ void Camera::Render( Scene& s ) {
     FrameParams fp;
     fp.pixelSize = vp->GetPixelSize();
 
-    fp.centerX = (xBegin + xEnd - 1) * 0.5;
-    fp.centerY = (yBegin + yEnd - 1) * 0.5;
+    fp.xBegin   = xBegin;
+    fp.yBegin   = yBegin;
+    fp.centerX  = (xBegin + xEnd - 1) * 0.5;
+    fp.centerY  = (yBegin + yEnd - 1) * 0.5;
 
     // Create our orthonormal basis, using Suttern, pg. 159.
     fp.w = direction.normalized();
@@ -173,7 +175,6 @@ void Camera::Render( Scene& s ) {
         auto sampler = s.CloneSampler(); 
         auto const numSamples = s.GetNumSamples();
 
-        // 
         auto const y0 = range.rows().begin();
         auto const y1 = range.rows().end();
         auto const x0 = range.cols().begin();
@@ -245,8 +246,8 @@ RenderResults Camera::RenderPixel(const Scene& s,
     RenderResults results(s);
     Ray lastRay; // used for GetBackground;
     for( auto const & sample : samples) {
-        auto const xv = (fp.pixelSize * (x - fp.centerX + sample[0])) * fp.u;
-        auto const yv = (fp.pixelSize * (y - fp.centerY + sample[1])) * fp.v;
+        auto const xv = (fp.pixelSize * (fp.xBegin + x - fp.centerX + sample[0])) * fp.u;
+        auto const yv = (fp.pixelSize * (fp.yBegin + y - fp.centerY + sample[1])) * fp.v;
         auto ray = GetRay(xv, yv, fp.w);
         LOG_MSG( 4, "\n" << ray );
 

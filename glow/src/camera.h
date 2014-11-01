@@ -22,6 +22,8 @@ namespace glow {
 
     // These are the constants during a render of an entire frame.
     struct FrameParams {
+        float xBegin;
+        float yBegin;
         float pixelSize;
         float centerX;
         float centerY;

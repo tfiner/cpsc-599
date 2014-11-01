@@ -99,19 +99,19 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'observer', 'jquery_ui']
 
         // });
 
-        $("#render").button({
-            text: false,
-            icons: {
-                primary: "fa fa-camera"
-            }
-        }).click(function(e) {
-            $("#renderImage").hide();
-            $("#renderBusy").show();
+        // $("#render").button({
+        //     text: false,
+        //     icons: {
+        //         primary: "fa fa-camera"
+        //     }
+        // }).click(function(e) {
+        //     $("#renderImage").hide();
+        //     $("#renderBusy").show();
 
-            observer.sendEvent({
-                name:   "requestRenderScence",
-                scene:  editor.editor.get() 
-            });
-        });
+        //     observer.sendEvent({
+        //         name:   "requestRenderScence",
+        //         scene:  editor.editor.get() 
+        //     });
+        // });
 
     });

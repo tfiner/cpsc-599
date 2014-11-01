@@ -21,3 +21,8 @@ Started working with the panoramic viewer at http://www.dimin.net/software/panoj
 Unfortunately, while the viewer itself has all the features I want (pan and zoom), it is sorely lacking in my API requirements:
 must play well with others (little to no globals).  It is a collection of JS files that are littered with globals, including functions named things like "callback" that will surely clash with my other libraries and code.
 
+Added tiled rendering.  I think this will be an enormous boost to interactivity.
+
+TODO:
+Fix image area selection so that the image selection actually works.
+Start caching things.  JSON parsing is quick enough so that I'm not worried about passing those to each process.

@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
                 newCellHeight = cellHeight + deltaCellHeight;
 
             gridster.resize_widget(cell, newCellWidth, newCellHeight);
-            };
+        };
 
         console.log("render loading...");
 
@@ -45,15 +45,57 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
 
 
         $('#tiledRenderImage').tiles({
-          original: {
-            width:  2048,                
-            height: 2048,                
-          },
-          basePath: "glow/render/",     
-          loading:  "images/load.gif",      // Placeholder image for loading images
-          zoom: 0,                          // Show the original content (i.e. the splash screen)
-          tileSize: 256
+            original: {
+                width: 2048,
+                height: 2048,
+            },
+            basePath: "glow/render/",
+            loading: "images/load.gif", // Placeholder image for loading images
+            zoom: 0, // Show the original content (i.e. the splash screen)
+            tileSize: 256
         });
+
+        $('#tiledRenderImage').tiles("center");
+
+        $('#tiledRenderImage').dblclick(function(e) {
+            console.log("dblclick", e);
+
+            // "tiles-1-1-1"
+            var targetClass = $(e.target).attr("class");
+            if (targetClass == undefined){
+                return;
+            }
+
+            var fields      = targetClass.split("-"),
+                zoom        = fields[1],
+                col         = fields[2],
+                row         = fields[3],
+                x           = ((parseInt(col) - 1) * 256) + 128,
+                y           = ((parseInt(row) - 1) * 256) + 128,
+                cx          = $("#tiledRenderImage").width() / 2.0,
+                cy          = $("#tiledRenderImage").height() / 2.0,
+                dx          = Math.abs(x - cx),
+                dy          = Math.abs(y - cy);
+
+            console.log("col " + col + " row " + row);
+            console.log("x " + x + " y " + y);
+
+            if (x < cx && (x - dx < 0)) {
+                console.log("-X Edge ", x - dx);
+            }
+            if (x >= cx && (x + dx > 2048)) {
+                console.log("+X Edge ", x + dx - 2048);
+            }
+            if (y < cy && (y - dy < 0)) {
+                console.log("-Y Edge ", y - dy);
+            }
+            if (y >= cy && (y + dy > 2048)) {
+                console.log("+Y Edge ", y + dy - 2048);
+            }
+
+            $('#tiledRenderImage').tiles("move", x, y);
+        });
+
 
         return {
             resizeCell: resizeCell

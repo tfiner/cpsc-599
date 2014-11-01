@@ -67,6 +67,10 @@ define(
                 result.node.scrollTo();
             }
         });
+
+        observer.subscribe("newView", function(evt) {
+        });
+
         
         return {
             div:    div,

@@ -21,8 +21,8 @@
    "sceneSampler":{
         "type":"rayMarcher",
         "minDistance":"0.0",
-        "maxDistance":"60.0",
-        "delta":"0.25"
+        "maxDistance":"30.0",
+        "delta":"0.5"
     },
    "viewPlane":{
       "width":20,

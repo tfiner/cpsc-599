@@ -163,6 +163,11 @@ void RecorderPng::Finish() {
 
     png_write_end(png_ptr_, png_info_ptr_);
     png_destroy_write_struct(&png_ptr_, &png_info_ptr_);
+
+    if (fp_)
+        fclose(fp_);
+
+    fp_ = nullptr;
 }
 
 

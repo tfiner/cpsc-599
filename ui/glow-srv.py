@@ -14,6 +14,7 @@ import json
 import urllib
 import base64
 import tempfile
+import hashlib
 
 import glow
 
@@ -23,6 +24,7 @@ app = Flask(__name__, static_folder='assets')
 
 cmdLine = "glow --input={0} --output={1} --verbose"
 curSceneFile = ""
+curSceneHash = ""
 curNoisePreviewDir = ""
 
 @app.route('/')
@@ -35,7 +37,7 @@ def server_status():
 
 # @app.route('/glow/setScene')
 def set_scene():
-    global curSceneFile
+    global curSceneFile, curSceneHash
 
     print "-" * 80
     print "request query:", request.query_string
@@ -55,6 +57,10 @@ def set_scene():
     outFile.write(query)
     # json.dump(query, outFile, indent=4)
     curSceneFile = name
+
+    hasher = hashlib.md5()
+    hasher.update(query)
+    curSceneHash = hasher.hexdigest()
 
     # return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
@@ -83,32 +89,45 @@ def render():
     return retVal
 
 
-# /glow/render/tile/tiles/1/2_2.jpg
+# /glow/render/tile/tiles/1/2_2.png
 @app.route('/glow/render/tiles/<int:zoom>/<path:tileId>')
 def render_tile(zoom, tileId):
     print "Request for tile: {1} at zoom {0}".format(zoom, tileId)
 
+    # Generate a consistent name based upon the tile request.
+    # Identical future requests result in the same name.
+    # This is the basis for the tile cache.
     col,row = tileId.split('.')[0].split('_')
 
     x0 = (int(col)-1) * 256
     x1 = x0 + 256
 
+    # y is inverted (the pano code assumes y is down...)
+    row = 8 - int(row)
     y0 = (int(row)-1) * 256
     y1 = y0 + 256
 
-    (handle, outputName) = tempfile.mkstemp(suffix='.png', dir="assets/tiles", prefix='tile')
+    outDir = "assets/tiles/" + curSceneHash
+    if not os.path.exists(outDir):
+        os.mkdir(outDir)
 
-    cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose". \
-        format(curSceneFile, outputName, x0, x1, y0, y1)
+    outputName = "{}_{}-{}_{}-{}.png".format(zoom, x0, x1, y0, y1)
+    outputFilepath = os.path.join(outDir, outputName)
+    sendFile = False
+    if os.path.exists(outputFilepath):
+        print "Sending cached tile:", outputFilepath
+        sendFile = True
+    else:
+        cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose". \
+            format(curSceneFile, outputFilepath, x0, x1, y0, y1)
 
-    print "Calling glow:", cmdLineArgs
+        print "Calling glow:", cmdLineArgs
 
-    ret = glow.run(cmdLineArgs.split())
-    if ret == 0:
-        imgName = os.path.basename(outputName)
-        retImg = os.path.join('tiles', imgName)
-        # print "retImg", retImg
-        return app.send_static_file(retImg)
+        sendFile = glow.run(cmdLineArgs.split()) == 0
+
+    if sendFile:
+        print "sending {} {}".format(outDir, outputName)
+        return send_from_directory(outDir, outputName)
 
     abort(500)
 

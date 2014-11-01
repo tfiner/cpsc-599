@@ -22,7 +22,7 @@
         "type":"rayMarcher",
         "minDistance":"0.0",
         "maxDistance":"60.0",
-        "delta":"0.125"
+        "delta":"0.25"
     },     
    "viewPlane":{
       "width":20,
