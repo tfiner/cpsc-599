@@ -131,6 +131,8 @@ void SetPixel8(std::vector<png_byte>& array, size_t idx, float red, float green,
 }
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 void SetPixel16(std::vector<png_byte>& array, size_t idx, float gray) {
     assert(gray >= 0.0);
     assert(gray <= 1.0);
@@ -144,6 +146,7 @@ void SetPixel16(std::vector<png_byte>& array, size_t idx, float gray) {
     auto p = reinterpret_cast<png_uint_16*>(&array[idx]);    
     *p = g;
 }
+#pragma clang diagnostic pop
 
 
 // This implementation assumes that x is increasing and contiguous.

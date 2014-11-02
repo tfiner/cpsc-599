@@ -1,0 +1,45 @@
+Suggestions from meeting:
+
+CLOUD:
+
+Work on cloud based.
+In that end, started off using google's cloud compute engine.
+
+Problems
+
+Debian!  Argh, so out of date!  Fought it for half a day, gave up!
+
+Found Vagrant (neat!) and Packer, but the vmware_fusion builder cost $.  Workds with GCE though.  :(
+
+Found VirtualBox to GCE
+https://www.youtube.com/watch?v=YlcR6ZLebTM
+
+Built a Virtual Box test, tried it, works!  Now building a version I can develop on, then run on.  May decide to build two versions, one with a dev environ, the other to deploy on.  One reason to have a dev version is the number of cores needed to compile (more == better).
+
+
+
+Clang 3.5+
+
+Dependencies
+Eigen, <complex>, got rid of cmake flags to use default stdlib
+
+Boost python
+
+TRNG compilation
+
+TBB compilation error, is_trivially_copyable
+Fixed: https://software.intel.com/en-us/forums/topic/431422
+
+
+TODO:
+    Organize notes into different sections.
+    See if there's a way to compress the returned image.
+        There is, the header of the XMLHttpRequest can include gzip.
+        Flask-Compress does the deed.
+
+    From last report's TODOs:
+        f. Add the other JSON editor (code).
+
+    Fix image area selection so that the image selection actually works.
+    Revisit caches.  JSON parsing is quick enough so that I'm not worried about passing those to each process.
+

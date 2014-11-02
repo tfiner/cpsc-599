@@ -57,12 +57,9 @@ include_directories( ${NOISEUTILS_INCLUDE_DIR} )
 # Use default stdlib.
 set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -m64  -Wall -Woverloaded-virtual -Wextra -fdiagnostics-fixit-info" )
 
-# set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -fdiagnostics-fixit-info" )
-
-# Unneeded -isystem
-# set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -isystem /usr/local/include -fdiagnostics-fixit-info" )
-
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb3 -O0")
+
+# I had trouble with different O settings in release, never debugged them.
 set(CMAKE_CXX_FLAGS_RELEASE "-O0 -DNDEBUG")
 
 set(SRCS 
