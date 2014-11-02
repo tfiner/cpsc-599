@@ -4,7 +4,7 @@
 
 // An mailing list post led me to include this to get rid of a linker error:
 // https://mail.python.org/pipermail/cplusplus-sig/2011-March/015897.html
-#include <python.h>
+#include <Python.h>
 
 #include "loader.h"
 #include "unwind_dump.h"
