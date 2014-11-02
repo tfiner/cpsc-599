@@ -34,6 +34,9 @@ message( STATUS "   libs:     ${PNG_LIBRARY} ")
 find_package(PythonDev REQUIRED)
 include_directories( ${PYTHON_INCLUDE_DIR} )
 
+find_package(Cajun REQUIRED)
+include_directories( ${Cajun_INCLUDE_DIR} )
+
 set(EIGEN3_INCLUDE_DIR "/usr/include/eigen3" CACHE FILEPATH "Path to Eigen3")
 include_directories( "${EIGEN3_INCLUDE_DIR}" )
 
