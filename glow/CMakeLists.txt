@@ -34,7 +34,7 @@ message( STATUS "   libs:     ${PNG_LIBRARY} ")
 find_package(PythonDev REQUIRED)
 include_directories( ${PYTHON_INCLUDE_DIR} )
 
-set(EIGEN3_INCLUDE_DIR "/usr/local/include/eigen3" CACHE FILEPATH "Path to Eigen3")
+set(EIGEN3_INCLUDE_DIR "/usr/include/eigen3" CACHE FILEPATH "Path to Eigen3")
 include_directories( "${EIGEN3_INCLUDE_DIR}" )
 
 set(Boost_USE_STATIC_LIBS OFF) 
@@ -54,7 +54,8 @@ include_directories( ${LIBNOISE_INCLUDE_DIR} )
 set(NOISEUTILS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/noiseutils")
 include_directories( ${NOISEUTILS_INCLUDE_DIR} )
 
-set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -isystem /usr/local/include -fdiagnostics-fixit-info" )
+set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -fdiagnostics-fixit-info" )
+# set(CMAKE_CXX_FLAGS "-DUSE_TBB -std=c++11 -stdlib=libc++ -m64  -Wall -Woverloaded-virtual -Wextra -isystem /usr/local/include -fdiagnostics-fixit-info" )
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb3 -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O0 -DNDEBUG")
 
