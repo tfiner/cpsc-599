@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+
 set(SRCS 
     src/noisegen.cpp
     src/latlon.cpp
@@ -36,4 +38,6 @@ set(SRCS
     src/module/voronoi.cpp
 )
 
+
 add_library(noise STATIC ${SRCS})
+SET_TARGET_PROPERTIES(noise PROPERTIES COMPILE_FLAGS "-fPIC")
