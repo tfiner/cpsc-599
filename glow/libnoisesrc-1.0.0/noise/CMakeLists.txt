@@ -36,4 +36,4 @@ set(SRCS
     src/module/voronoi.cpp
 )
 
-add_library(noise ${SRCS})
+add_library(noise STATIC ${SRCS})
