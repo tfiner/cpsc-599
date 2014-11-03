@@ -179,10 +179,10 @@ void Camera::Render( Scene& s ) {
         auto const y1 = range.rows().end();
         auto const x0 = range.cols().begin();
         auto const x1 = range.cols().end();
-        // LOG_MSG(0, 
-        //     "x0: " << x0 << " x1: " << x1 << " " 
-        //     "y0: " << y0 << " y1: " << y1 
-        // );
+        LOG_MSG(2, 
+            "x0: " << x0 << " x1: " << x1 << " " 
+            "y0: " << y0 << " y1: " << y1 
+        );
 
         for( auto y = y0; y < y1; ++y ) {
             for( auto x = x0; x < x1; ++x ) {
