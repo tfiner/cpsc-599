@@ -28,7 +28,7 @@ body{
 }
 
 .gridster {
-    opacity: none;
+    opacity: 1.0;
 }
 
 .gridster li header {
