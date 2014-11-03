@@ -118,7 +118,7 @@ def render_tile(zoom, tileId):
         print "Sending cached tile:", outputFilepath
         sendFile = True
     else:
-        cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose --verbose --verbose". \
+        cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose". \
             format(curSceneFile, outputFilepath, x0, x1, y0, y1)
 
         print "Calling glow:", cmdLineArgs
