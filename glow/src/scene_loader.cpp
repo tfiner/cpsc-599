@@ -116,8 +116,8 @@ namespace {
         // Try loading version 2.
         try {
             LoadNumber( sp.viewPlane.x0,        vp["x0"] );
-            LoadNumber( sp.viewPlane.x1,        vp["x1"] );
             LoadNumber( sp.viewPlane.y0,        vp["y0"] );
+            LoadNumber( sp.viewPlane.x1,        vp["x1"] );
             LoadNumber( sp.viewPlane.y1,        vp["y1"] );
 
         // Failing that, load old version 1.

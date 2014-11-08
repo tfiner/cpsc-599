@@ -207,8 +207,8 @@ namespace glow {
             ss << options[IMG_AREA].arg;
 
             auto x0 = 0;
-            auto x1 = 0;
             auto y0 = 0;
+            auto x1 = 0;
             auto y1 = 0;
             auto dummy = ' ';
 
@@ -222,14 +222,13 @@ namespace glow {
 
             LOG_MSG(1, "Setting image area to: "
                 << "x0: " << x0 << " "
-                << "x1: " << x1 << " "
                 << "y0: " << y0 << " "
+                << "x1: " << x1 << " "
                 << "y1: " << y1
             );
 
-            vp->SetImgAreaPixels(x0, x1, y0, y1);
+            vp->SetImgAreaPixels(x0, y0, x1, y1);
         }
-
 
         auto const & vp = scene->GetViewPlane();
         auto const px = vp->GetWidthPixels();
