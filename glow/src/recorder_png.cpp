@@ -7,6 +7,7 @@
 #include "log_msg.h"
 
 #include <cassert>
+#include <algorithm>
 
 
 using namespace std;
@@ -14,7 +15,7 @@ using namespace glow;
 
 
 RecorderPng::RecorderPng(const char* out, int w, int h, int depth, const char* comment) : 
-    out_(out), w_(w), h_(h), depth_(depth), comment_(comment) {
+    out_(out), w_(w), h_(h), depth_(depth), comment_(comment), gamma_(1.0f) {
     Init();
 }
 
@@ -25,42 +26,12 @@ RecorderPng::~RecorderPng() {
 
 
 void RecorderPng::RecordColorImpl(const ColorFilm& film) {
-    float fmin = std::numeric_limits<float>::max();
-    float fmax = std::numeric_limits<float>::min();
-
-    for (auto const & c : film) {
-        fmin = std::min(fmin, std::min(c.r, std::min(c.g, c.b)));
-        fmax = std::max(fmax, std::max(c.r, std::max(c.g, c.b)));
-    }
-
-    auto const range = fmax - fmin;
-    LOG_MSG(1, 
-           "min: " << fmin << ", "
-        << "max: " << fmax << ", "
-        << "range: " << range 
-    );
-
-    bool fminInRange = fmin >= 0.0 && fmin <= 1.0;
-
     for (int y = 0; y < h_; ++y) {
         for (int x = 0; x < w_; ++x) {
             auto c = film[y * w_ + x]; 
-            // normalize to [0-1]
-            c.r = (c.r - fmin) / fmax;
-            c.g = (c.g - fmin) / fmax;
-            c.b = (c.b - fmin) / fmax;
-
-            if ( fminInRange ) {
-                c.r = std::min(c.r + fmin, 1.0f);
-                c.g = std::min(c.g + fmin, 1.0f);
-                c.b = std::min(c.b + fmin, 1.0f);
-            }
-
             SetPixel(x, y, c.r, c.g, c.b);            
         }
     }
-
-
 }
 
 void RecorderPng::RecordDepthImpl(const DepthFilm& film) {
@@ -120,15 +91,11 @@ void RecorderPng::RecordDepthImpl(const DepthFilm& film) {
 }
 
 
-void SetPixel8(std::vector<png_byte>& array, size_t idx, float red, float green, float blue) {
-    png_byte r = static_cast<png_byte>( red * 255 )   & 0xff;
-    png_byte g = static_cast<png_byte>( green * 255 ) & 0xff;
-    png_byte b = static_cast<png_byte>( blue * 255 )  & 0xff;
-    
-    array[idx+0] = r;
-    array[idx+1] = g; 
-    array[idx+2] = b;
-}
+// void SetPixel8(std::vector<png_byte>& array, size_t idx, float red, float green, float blue) {
+//     array[idx+0] = GammaEncode(red);
+//     array[idx+1] = GammaEncode(green);
+//     array[idx+2] = GammaEncode(blue);
+// }
 
 
 #pragma clang diagnostic push
@@ -154,9 +121,13 @@ void RecorderPng::SetPixel(int x, int y, float red, float green, float blue) {
     // Bytes are tightly packed RGB RGB RGB
     const size_t idx = (y * w_ * pixSize_) + (x * pixSize_);
 
-    if ( depth_ == 8 )
-        SetPixel8( array_bytes_, idx, red, green, blue );
-    else if ( depth_ == 16 )
+    if ( depth_ == 8 ) {
+        // SetPixel8( array_bytes_, idx, red, green, blue );
+        array_bytes_[idx+0] = GammaEncode(red);
+        array_bytes_[idx+1] = GammaEncode(green);
+        array_bytes_[idx+2] = GammaEncode(blue);
+
+    } else if ( depth_ == 16 )
         SetPixel16( array_bytes_, idx, red );
 }   
 
@@ -235,4 +206,11 @@ void RecorderPng::Flush(){
         png_write_row(png_ptr_, &array_bytes_[row] );
     }
 }
+
+png_byte RecorderPng::GammaEncode(float value) const {
+    auto corrected  = std::pow(value, gamma_) * 255.0f;
+    auto clamped    = std::max(0.0f, std::min(corrected, 255.0f));
+    return static_cast<png_byte>(clamped);
+}
+
 

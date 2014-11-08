@@ -22,6 +22,8 @@ namespace glow {
         RecorderPng(const char* out, int w, int h, int depth, const char* comment);
         ~RecorderPng();
 
+        void SetGamma(float gamma) { gamma_ = gamma; }
+
     private:
         std::string out_;
         int w_;
@@ -36,6 +38,7 @@ namespace glow {
 
         typedef std::vector< png_byte > ArrayBytes;
         ArrayBytes array_bytes_;
+        float gamma_;
 
         void RecordColorImpl(const ColorFilm& film) override;
         void RecordDepthImpl(const DepthFilm& film) override;
@@ -44,6 +47,8 @@ namespace glow {
         void Flush();
         void Finish();
         void SetPixel(int x, int y, float red, float green, float blue);
+
+        png_byte GammaEncode(float value) const;
     };
 
 

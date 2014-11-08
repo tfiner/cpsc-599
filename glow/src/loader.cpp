@@ -47,7 +47,8 @@ namespace {
         VERSION, 
         PARSE, 
         PREVIEW,
-        IMG_AREA
+        IMG_AREA,
+        GAMMA
     };
 
     const option::Descriptor usage[] = {
@@ -61,6 +62,7 @@ namespace {
         {PARSE,     0,    "p",    "parseOnly",    option::Arg::None,     "  --parseOnly, -p  \tJust parse the scene file, don't render anything." },
         {PREVIEW,   0,    "",     "preview",      Required,              "  --preview,       \tThe directory to write previews of the noise library tree." },    
         {IMG_AREA,  0,    "",     "imageArea",    Required,              "  --imageArea,     \tX0,X1,Y0,Y1 separated by commas (e.g. '--imgArea 256,512,0,256')." },
+        {GAMMA,     0,    "g",    "gamma",        Required,              "  --gamma,     -g  \tThe gamma value to convert floating point into 8 bit." },
 
         {UNKNOWN, 0,    "" ,    "",             option::Arg::None,     "\nExamples:\n  glow --input scene.txt --output scene.png" },
         {0,0,0,0,0,0}
@@ -228,7 +230,7 @@ namespace glow {
             );
 
             vp->SetImgAreaPixels(x0, y0, x1, y1);
-        }
+        }        
 
         auto const & vp = scene->GetViewPlane();
         auto const px = vp->GetWidthPixels();
@@ -241,18 +243,21 @@ namespace glow {
         }
 
         {
-            LOG_MSG(1, "Setting recorder PNG");
-            auto colorRecorder = RecorderPtr( 
-                new RecorderPng(options[OUTPUT].arg, px, py, 8, sceneText.c_str()) 
-            );
-            scene->SetColorRecorder( colorRecorder );
+            float gamma = 1.0;
+            if ( options[GAMMA] ) {
+                std::stringstream ss;
+                if (ss << options[GAMMA].arg)
+                    ss >> gamma;
+            }
+
+            LOG_MSG(1, "Setting recorder PNG, gamma " << gamma);
+            auto pngRecorder = new RecorderPng(options[OUTPUT].arg, px, py, 8, sceneText.c_str());
+            pngRecorder->SetGamma(gamma);
+            scene->SetColorRecorder( RecorderPtr(pngRecorder) );
         }
 
         if (options[DEPTH] && options[DEPTH].arg) {
-            auto depthRecorder = RecorderPtr( 
-                new RecorderPng(options[DEPTH].arg, px, py, 8, sceneText.c_str()) 
-            );
-            scene->SetDepthRecorder( depthRecorder );
+            scene->SetDepthRecorder( RecorderPtr(new RecorderPng(options[DEPTH].arg, px, py, 8, sceneText.c_str())) );
         }
         
         LOG_MSG(1, "Begin render...");
