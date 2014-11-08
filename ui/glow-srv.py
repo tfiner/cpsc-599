@@ -99,13 +99,14 @@ def render_tile(zoom, tileId):
     # This is the basis for the tile cache.
     col,row = tileId.split('.')[0].split('_')
 
-    x0 = (int(col)-1) * 256
-    x1 = x0 + 256
+    TILE_SIZE = 64
+    x0 = (int(col)-1) * TILE_SIZE
+    x1 = x0 + TILE_SIZE
 
     # y is inverted (the pano code assumes y is down...)
     row = 8 - int(row)
-    y0 = (int(row)-1) * 256
-    y1 = y0 + 256
+    y0 = (int(row)-1) * TILE_SIZE
+    y1 = y0 + TILE_SIZE
 
     outDir = "assets/tiles/" + curSceneHash
     if not os.path.exists(outDir):
@@ -118,8 +119,8 @@ def render_tile(zoom, tileId):
         print "Sending cached tile:", outputFilepath
         sendFile = True
     else:
-        cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --verbose". \
-            format(curSceneFile, outputFilepath, x0, x1, y0, y1)
+        cmdLineArgs = "glow --input={0} --output={1} --imageArea={2},{3},{4},{5} --gamma={6} --verbose". \
+            format(curSceneFile, outputFilepath, x0, x1, y0, y1, 1.25)
 
         print "Calling glow:", cmdLineArgs
 

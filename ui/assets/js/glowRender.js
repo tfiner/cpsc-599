@@ -22,8 +22,9 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
                 deltaCellHeight = deltaHeight > 0 ? parseInt(((deltaHeight / gridster.min_widget_height) + 1).toFixed()) : 0,
                 newCellHeight = cellHeight + deltaCellHeight;
 
-            gridster.resize_widget(cell, newCellWidth, newCellHeight);
-        };
+                gridster.resize_widget(cell, newCellWidth, newCellHeight);
+            },
+            TILE_SIZE = 64
 
         console.log("render loading...");
 
@@ -52,7 +53,7 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
             basePath: "glow/render/",
             loading: "images/load.gif", // Placeholder image for loading images
             zoom: 0, // Show the original content (i.e. the splash screen)
-            tileSize: 256
+            tileSize: TILE_SIZE
         });
 
         $('#tiledRenderImage').tiles("center");
@@ -70,8 +71,8 @@ define(['jquery', 'underscore', 'observer', 'jquery_ui', 'jquery_tiles'],
                 zoom        = fields[1],
                 col         = fields[2],
                 row         = fields[3],
-                x           = ((parseInt(col) - 1) * 256) + 128,
-                y           = ((parseInt(row) - 1) * 256) + 128,
+                x           = ((parseInt(col) - 1) * TILE_SIZE) + 128,
+                y           = ((parseInt(row) - 1) * TILE_SIZE) + 128,
                 cx          = $("#tiledRenderImage").width() / 2.0,
                 cy          = $("#tiledRenderImage").height() / 2.0,
                 dx          = Math.abs(x - cx),
