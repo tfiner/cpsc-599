@@ -121,21 +121,23 @@ Camera::~Camera() {}
 void Camera::Render( Scene& s ) {
     auto const & vp         = s.GetViewPlane();
 
-    auto xBegin = 0u;
-    auto xEnd   = 0u;
+    auto xBegin = 0;
+    auto xEnd   = 0;
     std::tie(xBegin, xEnd)  = vp->GetHSpanPixels();
 
-    auto yBegin = 0u;
-    auto yEnd   = 0u;
+    auto yBegin = 0;
+    auto yEnd   = 0;
     std::tie(yBegin, yEnd)  = vp->GetVSpanPixels();
 
     auto const width        = xEnd - xBegin; 
+    assert(width > 0);
     auto const height       = yEnd - yBegin;
+    assert(height > 0);
 
     LOG_MSG(1, "Rendering " 
         << "x0: " << xBegin << " "
-        << "x1: " << xEnd << " "
         << "y0: " << yBegin << " "
+        << "x1: " << xEnd << " "
         << "y1: " << yEnd << " "
         << "width: " << width << " "
         << "height: " << height);
@@ -179,10 +181,10 @@ void Camera::Render( Scene& s ) {
         auto const y1 = range.rows().end();
         auto const x0 = range.cols().begin();
         auto const x1 = range.cols().end();
-        LOG_MSG(2, 
-            "x0: " << x0 << " x1: " << x1 << " " 
-            "y0: " << y0 << " y1: " << y1 
-        );
+        // LOG_MSG(2, 
+        //     "x0: " << x0 << " x1: " << x1 << " " 
+        //     "y0: " << y0 << " y1: " << y1 
+        // );
 
         for( auto y = y0; y < y1; ++y ) {
             for( auto x = x0; x < x1; ++x ) {
