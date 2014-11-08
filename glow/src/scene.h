@@ -65,13 +65,13 @@ namespace glow {
         const SceneSamplerPtr& GetSceneSampler() const { return sceneSampler; }
 
         const RecorderPtr& GetColorRecorder() const;
-        void SetColorRecorder(RecorderPtr& rec);
+        void SetColorRecorder(RecorderPtr rec);
 
         const RecorderPtr& GetDepthRecorder() const;
-        void SetDepthRecorder(RecorderPtr& rec);
+        void SetDepthRecorder(RecorderPtr rec);
 
         const LightSeq& GetLights() const;
-        void SetLights(LightSeq& ls);
+        void SetLights(LightSeq ls);
 
         // Most samplers are based upon a linear PRNG that requires state.
         // Multithreading plays merry havoc with the state information.

@@ -37,7 +37,7 @@ Color Scene::GetBackground(const Ray& r, int x, int y) const {
 const RecorderPtr& Scene::GetColorRecorder() const { return colorRecorder; }
 
 
-void Scene::SetColorRecorder(RecorderPtr& rec) { 
+void Scene::SetColorRecorder(RecorderPtr rec) { 
     assert( rec != nullptr );
     colorRecorder.reset(rec.release()); 
     assert( rec == nullptr );
@@ -47,7 +47,7 @@ void Scene::SetColorRecorder(RecorderPtr& rec) {
 const RecorderPtr& Scene::GetDepthRecorder() const { return depthRecorder; }
 
 
-void Scene::SetDepthRecorder(RecorderPtr& rec) { 
+void Scene::SetDepthRecorder(RecorderPtr rec) { 
     swap(depthRecorder, rec);
 }
 
@@ -57,7 +57,7 @@ const LightSeq& Scene::GetLights() const {
 }
 
 
-void Scene::SetLights(LightSeq& ls) { 
+void Scene::SetLights(LightSeq ls) { 
     swap(lights, ls); 
 }
 
