@@ -5,8 +5,8 @@
 // This file is the module that is responsible for the tools window. 
 
 
-define(['jquery', 'file', 'client', 'render', 'editor', 'observer', 'jquery_ui'],
-    function($, file, client, render, editor, observer) {
+define(['jquery', 'file', 'observer', 'jquery_ui'],
+    function($, file, observer) {
         console.log("tools loading...");
 
         var saveJson = function() {
@@ -90,28 +90,15 @@ define(['jquery', 'file', 'client', 'render', 'editor', 'observer', 'jquery_ui']
 
         });
 
-        // $("#sync").button({
-        //     text: false,
-        //     icons: {
-        //         primary: "icon-retweet"
-        //     }
-        // }).click(function(e) {
-
-        // });
-
-        // $("#render").button({
-        //     text: false,
-        //     icons: {
-        //         primary: "fa fa-camera"
-        //     }
-        // }).click(function(e) {
-        //     $("#renderImage").hide();
-        //     $("#renderBusy").show();
-
-        //     observer.sendEvent({
-        //         name:   "requestRenderScence",
-        //         scene:  editor.editor.get() 
-        //     });
-        // });
+        $("#render").button({
+            text: false,
+            icons: {
+                primary: "fa fa-camera"
+            }
+        }).click(function(e) {
+            observer.sendEvent({
+                name:   "renderEditScene"
+            });
+        });
 
     });

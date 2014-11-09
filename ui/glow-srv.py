@@ -19,7 +19,15 @@ import hashlib
 import glow
 
 
-app = Flask(__name__, static_folder='assets')
+class GlowFlask(Flask):
+    def get_send_file_max_age(self, name):
+        # Don't cache tiles
+        if 'assets/tiles' in name.lower():
+            return 0
+        # Otherwise, follow normal caching rules.
+        return Flask.get_send_file_max_age(self, name)    
+
+app = GlowFlask(__name__, static_folder='assets')
 
 
 cmdLine = "glow --input={0} --output={1} --verbose"
@@ -90,9 +98,9 @@ def render():
 
 
 # /glow/render/tile/tiles/1/2_2.png
-@app.route('/glow/render/tiles/<int:zoom>/<path:tileId>')
-def render_tile(zoom, tileId):
-    print "Request for tile: {1} at zoom {0}".format(zoom, tileId)
+@app.route('/glow/render/<hashId>/tiles/<int:zoom>/<path:tileId>')
+def render_tile(hashId, zoom, tileId):
+    print "Request for hash: {2} tile: {1} at zoom {0}".format(zoom, tileId, hashId)
 
     # Generate a consistent name based upon the tile request.
     # Identical future requests result in the same name.
@@ -108,7 +116,7 @@ def render_tile(zoom, tileId):
     y0 = (int(row)-1) * TILE_SIZE
     y1 = y0 + TILE_SIZE
 
-    outDir = "assets/tiles/" + curSceneHash
+    outDir = "assets/tiles/" + hashId
     if not os.path.exists(outDir):
         os.mkdir(outDir)
 

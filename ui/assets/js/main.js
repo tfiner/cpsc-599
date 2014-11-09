@@ -16,6 +16,14 @@ require.config({
         cytoscape:      'cytoscape.min',
         underscore:     'underscore-min',
 
+    shim: {
+            'md5': {
+                exports: 'CryptoJS'
+            },
+            'enc-base64-min': {
+                exports: 'CryptoJS'
+            }
+        },
         events:     'glowEvents',
         glowMain:   'glowMain',
         file:       'glowFile',

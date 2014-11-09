@@ -10,7 +10,7 @@
 define( ['jquery', 'status', 'observer'],
     function($, status, observer) {
 
-        console.log("tools loading...");
+        console.log("file loading...");
 
         return {
 

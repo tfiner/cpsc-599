@@ -7,7 +7,7 @@
 
 
 define(
-    ['jquery', 'gridster', 'status', 'events', 'render', 'underscore', 'tools'],
+    ['jquery', 'gridster', 'status', 'events', 'render', 'underscore', 'tools', 'editor'],
 
     function($, gridster, status, events, render, _) {
         console.log("glowMain loading...");

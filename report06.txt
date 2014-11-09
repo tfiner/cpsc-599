@@ -31,6 +31,23 @@ TBB compilation error, is_trivially_copyable
 Fixed: https://software.intel.com/en-us/forums/topic/431422
 
 
+Finished putting it on a vm, but...
+It brings up several drawbacks:
+    asynch means some requests just time out
+    slow...
+    not interactive, which is the goal...  :(
+    not scaling horizontally - flask isn't up to it.
+
+Possible enhancements:
+    1. Move to a MOM queue, requests.  This will be good for final renders, but not interactivity
+    2. Gridding, interpolation
+    3. Port to run on other machines, distribute the work
+    4. Run on GPU
+
+I want this to be faster for interactivity.
+
+
+
 TODO:
     Organize notes into different sections.
     See if there's a way to compress the returned image.
@@ -42,4 +59,10 @@ TODO:
 
     Fix image area selection so that the image selection actually works.
     Revisit caches.  JSON parsing is quick enough so that I'm not worried about passing those to each process.
+
+
+    Investigate Load Balancing
+    HAProxy
+    
+
 

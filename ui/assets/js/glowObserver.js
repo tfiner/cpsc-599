@@ -34,6 +34,7 @@ define(["underscore"],
 
                 if (_.has(observers,evt.name)){
                     _.each(observers[evt.name], function(o){ 
+                        // console.log("sendEvt ", o, evt);
                         o(evt); 
                     });
                 }

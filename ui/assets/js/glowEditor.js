@@ -12,6 +12,8 @@ define(
 
         var div = $("#editor1_window")[0],
             editor = new JSONEditor(div);
+
+        console.log("editor ", editor);
       
         editor.set({
           'msg': 'Drag and drop a glow scene JSON file here.'
@@ -28,6 +30,10 @@ define(
                 gridster.enable().enable_resize();
                 console.log("click grid / enable grid resize");
             });
+
+        editor.history.onChange = function() {
+            console.log("editor history change: ", editor.history.history);
+        };
 
         observer.subscribe("newNoiseNode", function(evt){
             // Find the right spot to append the new noise module to.
@@ -48,6 +54,10 @@ define(
         });
 
         observer.subscribe("newScene", function(evt) {
+            if (_.has(evt, "sender") && evt.sender == editor) {
+                return;
+            }
+
             editor.set(evt.scene);
         });
 
@@ -68,7 +78,12 @@ define(
             }
         });
 
-        observer.subscribe("newView", function(evt) {
+        observer.subscribe("renderEditScene", function(evt) {
+            observer.sendEvent({
+                name:   "newScene",
+                sender: editor,
+                scene:  editor.get() 
+            });
         });
 
         
