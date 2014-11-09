@@ -148,7 +148,7 @@ void Camera::Render( Scene& s ) {
             << "height: " << height);
         return;
     } 
-    auto colorFilm = ColorFilm( width * height, Color(0,0,0) );
+    auto colorFilm = ColorFilm( width * height, Color(1.0f,0,0) );
     LOG_MSG(0, 
         "color file size: " << colorFilm.size()
     );
@@ -172,7 +172,7 @@ void Camera::Render( Scene& s ) {
     Roll(fp.u, fp.v, fp.w);
 
     auto raytrace = [&colorFilm, &s, this, &fp, &depthFilm,
-                    yBegin, xBegin, width](const tbb::blocked_range2d<unsigned int>& range){
+                    yBegin, xBegin, width](const tbb::blocked_range2d<int>& range){
         // The sampler must be allocated on a per thread basis.
         auto sampler = s.CloneSampler(); 
         auto const numSamples = s.GetNumSamples();
@@ -181,7 +181,7 @@ void Camera::Render( Scene& s ) {
         auto const y1 = range.rows().end();
         auto const x0 = range.cols().begin();
         auto const x1 = range.cols().end();
-        // LOG_MSG(2, 
+        // LOG_MSG(0, 
         //     "x0: " << x0 << " x1: " << x1 << " " 
         //     "y0: " << y0 << " y1: " << y1 
         // );
@@ -190,8 +190,9 @@ void Camera::Render( Scene& s ) {
             for( auto x = x0; x < x1; ++x ) {
                 auto const samples = sampler->GenerateN(numSamples);
                 auto const results = RenderPixel(s, samples, fp, x, y);
-                auto const offset  = (y - yBegin) * width + (x - xBegin);
-                assert(offset < colorFilm.size());
+                auto const offset  = static_cast<unsigned int>((y - yBegin) * width + (x - xBegin));
+                assert(offset >= 0);
+                assert(static_cast<size_t>(offset) < colorFilm.size());
                 colorFilm[offset] = results.color;
                 if ( results.closest != std::numeric_limits<float>::max() )
                     depthFilm[offset] = results.closest;
@@ -200,7 +201,7 @@ void Camera::Render( Scene& s ) {
     };
 
     tbb::parallel_for(
-        tbb::blocked_range2d<unsigned int>(yBegin, yEnd, 8, xBegin, xEnd, 8),
+        tbb::blocked_range2d<int>(yBegin, yEnd, 8, xBegin, xEnd, 8),
         raytrace
     );    
 
