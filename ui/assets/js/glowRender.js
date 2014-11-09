@@ -93,9 +93,19 @@ define(['jquery', 'underscore', 'observer', 'md5', 'enc-base64-min', 'jquery_ui'
 
             initialize(evt.scene);
 
-            // Tell the tiles to start requesting new renders.
-            $('#tiledRenderImage').tiles('zoom', 1);
-            $("#renderImage").hide();
+            // Don't run right away, let the noise tree have a shot at 
+            // rendering first.
+            (function() {        
+                var timer,
+                    requestTiles = function () { 
+                        clearTimeout(timer);
+
+                        // Tell the tiles to start requesting new renders.
+                        $('#tiledRenderImage').tiles('zoom', 1);
+                        $("#renderImage").hide();
+                    },
+                    timer = setTimeout( requestTiles , 500 );
+            })();
         });
 
         // initialize();
