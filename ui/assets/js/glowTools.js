@@ -62,12 +62,11 @@ define(['jquery', 'file', 'observer', 'jquery_ui'],
             e.preventDefault();
 
             var onOk = function() {
-                var fsa = $('#fileSaveAs'),
-                    fname = $("#dialogSaveAs").find('input[name="fileName"]').val();
-
-                console.log("fname", fname);
-                fsa.attr("download", fname);
-                fsa.get(0).click();
+                var fname = $("#dialogSaveAs").find('input[name="fileName"]').val();
+                observer.sendEvent({
+                    name:       "saveEditScene",
+                    fileName:   fname                 
+                });
             };
 
             var dlg = $("#dialogSaveAs").dialog({

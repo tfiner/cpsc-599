@@ -86,6 +86,19 @@ define(
             });
         });
 
+        observer.subscribe("saveEditScene", function(evt) {
+            var data    = editor.get(),
+                json    = JSON.stringify(data),
+                blob    = new Blob([json], {type: "application/json"}),
+                url     = URL.createObjectURL(blob),
+                fsa     = $('#fileSaveAs');
+
+            fsa.attr("href", url);
+            fsa.attr("download", evt.fileName);
+            fsa.attr("textContent", evt.fileName);
+            fsa.get(0).click();
+        });
+
         
         return {
             div:    div,
